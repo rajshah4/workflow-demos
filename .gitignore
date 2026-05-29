@@ -3,6 +3,10 @@
 .env.local
 .env.example
 
+# Private story/research (for blog/video planning)
+.story.md
+.research.md
+
 # Python
 __pycache__/
 *.pyc
