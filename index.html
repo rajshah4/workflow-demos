@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Workflows - OpenHands SDK</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg: #09090b;
+            --surface: #18181b;
+            --border: #3f3f46;
+            --text: #fafafa;
+            --text-muted: #a1a1aa;
+            --accent: #8b5cf6;
+            --accent-light: #a78bfa;
+            --green: #22c55e;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
+        
+        /* Hero */
+        .hero {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* The Insight */
+        .insight {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(34, 197, 94, 0.08));
+            border: 1px solid rgba(139, 92, 246, 0.25);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 64px;
+        }
+        
+        .insight h2 {
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+            color: var(--accent-light);
+        }
+        
+        .insight p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+        
+        /* The Progression */
+        .progression {
+            margin-bottom: 64px;
+        }
+        
+        .progression h2 {
+            text-align: center;
+            margin-bottom: 32px;
+            font-size: 1.5rem;
+        }
+        
+        .levels {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .level {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.2s;
+        }
+        
+        .level:hover {
+            border-color: var(--accent);
+        }
+        
+        .level.highlight {
+            border-color: var(--green);
+            background: rgba(34, 197, 94, 0.05);
+        }
+        
+        .level-num {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+            opacity: 0.6;
+        }
+        
+        .level.l1 .level-num { background: rgba(161, 161, 170, 0.15); color: #a1a1aa; }
+        .level.l2 .level-num { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+        .level.l3 .level-num { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+        .level.l4 .level-num { background: rgba(34, 197, 94, 0.15); color: var(--green); }
+        
+        .level-content {
+            flex: 1;
+        }
+        
+        .level-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .level-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        .level-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .level-badge.here {
+            background: var(--green);
+            color: #000;
+        }
+        
+        /* The Difference */
+        .difference {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 64px;
+        }
+        
+        .difference h2 {
+            text-align: center;
+            margin-bottom: 32px;
+            font-size: 1.5rem;
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        
+        .compare-card {
+            padding: 28px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+        
+        .compare-card.old {
+            background: rgba(239, 68, 68, 0.05);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+        
+        .compare-card.new {
+            background: rgba(34, 197, 94, 0.05);
+            border-color: rgba(34, 197, 94, 0.2);
+        }
+        
+        .compare-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .compare-card.old h4 { color: #ef4444; }
+        .compare-card.new h4 { color: var(--green); }
+        
+        .compare-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        
+        .code-snippet {
+            background: #000;
+            border-radius: 10px;
+            padding: 16px;
+            font-family: 'SF Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 1.6;
+        }
+        
+        /* Demos */
+        .demos {
+            margin-bottom: 64px;
+        }
+        
+        .demos h2 {
+            text-align: center;
+            margin-bottom: 32px;
+            font-size: 1.5rem;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .demo-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.2s;
+        }
+        
+        .demo-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+        
+        .demo-icon {
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+        
+        .demo-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+        
+        .demo-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        .demo-tag {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 4px 12px;
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--accent-light);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        /* CTA */
+        .cta {
+            text-align: center;
+            padding: 48px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(34, 197, 94, 0.05));
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+        
+        .cta h2 {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+        }
+        
+        .cta p {
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+        
+        @media (max-width: 640px) {
+            .comparison, .demo-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>Dynamic Workflows</h1>
+            <p>When agents write their own orchestration code</p>
+        </div>
+        
+        <!-- The Key Insight -->
+        <div class="insight">
+            <h2>The breakthrough isn't new subagents</h2>
+            <p>It's that agents can now write the loop. Before, you wrote the orchestration. Now, the agent writes it.</p>
+        </div>
+        
+        <!-- The Stack -->
+        <div class="progression">
+            <h2>The Orchestration Stack</h2>
+            <div class="levels">
+                <div class="level l1">
+                    <div class="level-num">L1</div>
+                    <div class="level-content">
+                        <div class="level-title">Single Agent</div>
+                        <div class="level-desc">think → tool → observe</div>
+                    </div>
+                </div>
+                <div class="level l2">
+                    <div class="level-num">L2</div>
+                    <div class="level-content">
+                        <div class="level-title">Subagents</div>
+                        <div class="level-desc">You write the loop</div>
+                    </div>
+                </div>
+                <div class="level l3">
+                    <div class="level-num">L3</div>
+                    <div class="level-content">
+                        <div class="level-title">Human Workflows</div>
+                        <div class="level-desc">LangChain/LangGraph — you write the loop</div>
+                    </div>
+                </div>
+                <div class="level l4 highlight">
+                    <div class="level-num">L4</div>
+                    <div class="level-content">
+                        <div class="level-title">Agent Workflows</div>
+                        <div class="level-desc">Agent writes the loop ✨</div>
+                    </div>
+                    <span class="level-badge here">YOU ARE HERE</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- The Difference -->
+        <div class="difference">
+            <h2>What This Means</h2>
+            <div class="comparison">
+                <div class="compare-card old">
+                    <h4>🔧 Without Workflows (Manual)</h4>
+                    <p>You write the orchestration code</p>
+                    <div class="code-snippet">
+                        agents = [a1, a2, a3]<br>
+                        results = []<br>
+                        for agent in agents:<br>
+                        &nbsp;&nbsp;result = agent.run()<br>
+                        &nbsp;&nbsp;results.append(result)<br>
+                        synthesize(results)
+                    </div>
+                    <p style="margin-top: 12px; font-size: 0.8rem;">
+                        Like <a href="https://docs.langchain.com/oss/python/deepagents/deep-research" target="_blank" style="color: #ef4444; text-decoration: underline;">LangChain Deep Research</a> —
+                        you define the pipeline
+                    </p>
+                    <p style="margin-top: 16px; font-size: 0.85rem;">25+ lines. Sequential. You control flow.</p>
+                </div>
+                <div class="compare-card new">
+                    <h4>⚡ With Workflows (Dynamic)</h4>
+                    <p>You just give the objective</p>
+                    <div class="code-snippet">
+                        send_message(<br>
+                        &nbsp;&nbsp;"Research X from<br>
+                        &nbsp;&nbsp;multiple angles"<br>
+                        )<br>
+                        run()
+                    </div>
+                    <p style="margin-top: 12px; font-size: 0.8rem;">
+                        Like Claude Code's <a href="https://claude.com/blog/introducing-dynamic-workflows-in-claude-code" target="_blank" style="color: var(--green); text-decoration: underline;">Dynamic Workflows</a> —
+                        agent writes the pipeline
+                    </p>
+                    <p style="margin-top: 16px; font-size: 0.85rem;">2 lines. Agent writes the loop.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Demos -->
+        <div class="demos">
+            <h2>See It In Action</h2>
+            <div class="demo-grid">
+                <a href="comparison.html" class="demo-card">
+                    <div class="demo-icon">📖</div>
+                    <h4>Comparison Guide</h4>
+                    <p>Side-by-side code showing the difference</p>
+                    <span class="demo-tag">Start Here</span>
+                </a>
+                <a href="deep_research/deep_research_visual.html" class="demo-card">
+                    <div class="demo-icon">🔍</div>
+                    <h4>Deep Research Demo</h4>
+                    <p>Interactive visualization of the pattern</p>
+                    <span class="demo-tag">Visual</span>
+                </a>
+                <a href="deep_research/deep_research.py" class="demo-card" style="grid-column: span 2;">
+                    <div class="demo-icon">⚙️</div>
+                    <h4>Run the Actual SDK Demo</h4>
+                    <p>Real OpenHands SDK code in Python</p>
+                    <span class="demo-tag" style="background: rgba(34, 197, 94, 0.15); color: var(--green);">Requires API Key</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- CTA -->
+        <div class="cta">
+            <h2>Ready to try?</h2>
+            <p>Run the SDK demos with your own API key</p>
+            <div style="font-family: monospace; background: #000; padding: 16px 24px; border-radius: 10px; display: inline-block;">
+                cd ~/Code/workflow-demos<br>
+                python deep_research/deep_research.py "your question"
+            </div>
+        </div>
+    </div>
+</body>
+</html>

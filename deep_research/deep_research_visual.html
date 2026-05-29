@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Research Workflow - Visual Demo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif; background: #0a0a0f; color: #e6edf3; min-height: 100vh; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+        
+        header { text-align: center; margin-bottom: 40px; }
+        h1 { font-size: 2.5em; margin-bottom: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: #8b949e; font-size: 1.1em; }
+        .pattern-badge { display: inline-block; background: rgba(102, 126, 234, 0.2); color: #667eea; padding: 6px 14px; border-radius: 20px; font-size: 0.85em; margin-top: 15px; }
+        
+        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
+        
+        .panel { background: #161b22; border-radius: 16px; border: 1px solid #30363d; overflow: hidden; }
+        .panel-header { background: #21262d; padding: 15px 20px; border-bottom: 1px solid #30363d; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        
+        .code-editor { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; line-height: 1.7; background: #0d1117; padding: 20px; border-radius: 8px; margin: 15px; overflow: auto; max-height: 400px; }
+        .code-line { display: flex; }
+        .line-num { color: #484f58; width: 30px; text-align: right; padding-right: 15px; user-select: none; }
+        .kw { color: #ff7b72; } .fn { color: #d2a8ff; } .str { color: #a5d6ff; } .cm { color: #6e7681; font-style: italic; }
+        
+        .workflow-stages { padding: 20px; }
+        .stage { position: relative; padding-left: 35px; margin-bottom: 30px; }
+        .stage::before { content: ''; position: absolute; left: 12px; top: 30px; bottom: -15px; width: 2px; background: #30363d; }
+        .stage:last-child::before { display: none; }
+        
+        .stage-icon { position: absolute; left: 0; top: 0; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; }
+        .fan-out { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .cross-check { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .synthesize { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        
+        .stage-title { font-weight: 600; margin-bottom: 5px; }
+        .stage-desc { color: #8b949e; font-size: 0.85em; }
+        
+        .agents-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
+        .agent-chip { background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 12px 16px; flex: 1; min-width: 150px; transition: all 0.3s; cursor: pointer; }
+        .agent-chip:hover { border-color: #667eea; }
+        .agent-chip.active { border-color: #4facfe; box-shadow: 0 0 20px rgba(79, 172, 254, 0.3); }
+        .agent-chip.done { border-color: #238636; background: rgba(35, 134, 54, 0.1); }
+        .agent-name { font-weight: 600; font-size: 0.85em; color: #667eea; margin-bottom: 5px; }
+        .agent-status { font-size: 0.75em; color: #8b949e; }
+        .agent-chip.done .agent-status { color: #3fb950; }
+        .agent-finding { margin-top: 8px; padding-top: 8px; border-top: 1px solid #30363d; font-size: 0.8em; color: #c9d1d9; max-height: 40px; overflow: hidden; }
+        
+        .progress-section { margin-bottom: 30px; }
+        .progress-bar { height: 6px; background: #21262d; border-radius: 3px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); transition: width 0.5s; width: 0%; }
+        .progress-label { text-align: center; color: #8b949e; font-size: 0.9em; margin-top: 10px; }
+        
+        .controls { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
+        .btn { padding: 12px 30px; border-radius: 8px; font-size: 1em; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; }
+        .btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+        .btn-primary:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(102, 126, 234, 0.5); }
+        .btn-secondary { background: #21262d; color: #e6edf3; border: 1px solid #30363d; }
+        .btn-secondary:hover { background: #30363d; }
+        
+        .results-panel { display: none; background: #161b22; border-radius: 16px; border: 1px solid #30363d; padding: 30px; }
+        .results-panel h2 { color: #4facfe; margin-bottom: 20px; font-size: 1.5em; }
+        .report-section { margin-bottom: 25px; }
+        .report-section h3 { color: #667eea; margin-bottom: 10px; font-size: 1.1em; }
+        .report-section p { line-height: 1.8; color: #c9d1d9; }
+        .citation { color: #8b949e; font-size: 0.85em; }
+        .confidence { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 12px; font-size: 0.8em; }
+        .conf-high { background: rgba(35, 134, 54, 0.2); color: #3fb950; }
+        .conf-medium { background: rgba(255, 193, 7, 0.2); color: #ffc107; }
+        
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .agent-chip.active .agent-status { animation: pulse 1.5s ease-in-out infinite; }
+        
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-15px); } to { opacity: 1; transform: translateX(0); } }
+        .agent-chip { animation: slideIn 0.4s ease-out forwards; opacity: 0; }
+        .agent-chip:nth-child(1) { animation-delay: 0.1s; }
+        .agent-chip:nth-child(2) { animation-delay: 0.2s; }
+        .agent-chip:nth-child(3) { animation-delay: 0.3s; }
+        .agent-chip:nth-child(4) { animation-delay: 0.4s; }
+        
+        .concept-box { background: rgba(102, 126, 234, 0.1); border: 1px solid rgba(102, 126, 234, 0.3); border-radius: 12px; padding: 20px; margin-top: 20px; }
+        .concept-box h3 { color: #667eea; margin-bottom: 10px; }
+        .concept-box p { font-size: 0.9em; color: #c9d1d9; line-height: 1.6; }
+        
+        @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔍 Deep Research</h1>
+            <p class="subtitle">Inspired by Claude Code's /deep-research workflow</p>
+            <span class="pattern-badge">Fan-out → Cross-check → Synthesize</span>
+        </header>
+        
+        <div class="progress-section">
+            <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+            <p class="progress-label" id="progressLabel">Press ▶ Run to start the research workflow</p>
+        </div>
+        
+        <div class="main-grid">
+            <div class="panel">
+                <div class="panel-header">📝 Generated Workflow Script</div>
+                <div class="code-editor">
+                    <div class="code-line"><span class="line-num">1</span><span class="kw">async def</span> <span class="fn">main</span>(wf):</div>
+                    <div class="code-line"><span class="line-num">2</span><span class="cm">    # Phase 1: Fan out research across angles</span></div>
+                    <div class="code-line"><span class="line-num">3</span>    angles = [</div>
+                    <div class="code-line"><span class="line-num">4</span>        <span class="str">"market_overview"</span>,</div>
+                    <div class="code-line"><span class="line-num">5</span>        <span class="str">"technical_developments"</span>,</div>
+                    <div class="code-line"><span class="line-num">6</span>        <span class="str">"expert_opinions"</span>,</div>
+                    <div class="code-line"><span class="line-num">7</span>        <span class="str">"statistics"</span>,</div>
+                    <div class="code-line"><span class="line-num">8</span>    ]</div>
+                    <div class="code-line"><span class="line-num">9</span>    </div>
+                    <div class="code-line"><span class="line-num">10</span>    <span class="cm"># Parallel web searchers (4 agents)</span></div>
+                    <div class="code-line"><span class="line-num">11</span>    findings = <span class="kw">await</span> wf.<span class="fn">map_agents</span>(</div>
+                    <div class="code-line"><span class="line-num">12</span>        <span class="str">"web_searcher"</span>,</div>
+                    <div class="code-line"><span class="line-num">13</span>        angles,</div>
+                    <div class="code-line"><span class="line-num">14</span>        max_concurrency=<span class="kw">4</span></div>
+                    <div class="code-line"><span class="line-num">15</span>    )</div>
+                    <div class="code-line"><span class="line-num">16</span>    </div>
+                    <div class="code-line"><span class="line-num">17</span>    <span class="cm"># Phase 2: Cross-check claims</span></div>
+                    <div class="code-line"><span class="line-num">18</span>    verified = <span class="kw">await</span> wf.<span class="fn">run_agent</span>(</div>
+                    <div class="code-line"><span class="line-num">19</span>        <span class="str">"fact_checker"</span>,</div>
+                    <div class="code-line"><span class="line-num">20</span>        summarize(findings)</div>
+                    <div class="code-line"><span class="line-num">21</span>    )</div>
+                    <div class="code-line"><span class="line-num">22</span>    </div>
+                    <div class="code-line"><span class="line-num">23</span>    <span class="cm"># Phase 3: Synthesize final report</span></div>
+                    <div class="code-line"><span class="line-num">24</span>    report = <span class="kw">await</span> wf.<span class="fn">reduce_agent</span>(</div>
+                    <div class="code-line"><span class="line-num">25</span>        <span class="str">"synthesizer"</span>,</div>
+                    <div class="code-line"><span class="line-num">26</span>        verified</div>
+                    <div class="code-line"><span class="line-num">27</span>    )</div>
+                    <div class="code-line"><span class="line-num">28</span>    </div>
+                    <div class="code-line"><span class="line-num">29</span>    <span class="kw">return</span> report</div>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <div class="panel-header">⚡ Workflow Execution</div>
+                <div class="workflow-stages">
+                    <div class="stage">
+                        <div class="stage-icon fan-out">1</div>
+                        <div class="stage-title">Fan Out (map_agents)</div>
+                        <div class="stage-desc">4 agents research in parallel</div>
+                        <div class="agents-row">
+                            <div class="agent-chip" id="a1" data-finding="Market: $4.5B, 25% YoY growth. Key players: GitHub Copilot, Cursor, Claude Code, Amazon CodeWhisperer.">
+                                <div class="agent-name">🌐 Market Overview</div>
+                                <div class="agent-status">⏳ Pending</div>
+                                <div class="agent-finding"></div>
+                            </div>
+                            <div class="agent-chip" id="a2" data-finding="Tech: 1M token contexts, multi-model support, workflow orchestration. Claude Code workflows are new.">
+                                <div class="agent-name">🔧 Tech Devs</div>
+                                <div class="agent-status">⏳ Pending</div>
+                                <div class="agent-finding"></div>
+                            </div>
+                            <div class="agent-chip" id="a3" data-finding="Experts: 40-60% productivity gains, but warn about dependency. Split on AI code quality for critical systems.">
+                                <div class="agent-name">👥 Expert Views</div>
+                                <div class="agent-status">⏳ Pending</div>
+                                <div class="agent-finding"></div>
+                            </div>
+                            <div class="agent-chip" id="a4" data-finding="Stats: 85% devs use AI tools. 2.5 hrs/day saved avg. 73% Fortune 500 adoption.">
+                                <div class="agent-name">📊 Statistics</div>
+                                <div class="agent-status">⏳ Pending</div>
+                                <div class="agent-finding"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stage">
+                        <div class="stage-icon cross-check">2</div>
+                        <div class="stage-title">Cross-Check (fact_checker)</div>
+                        <div class="stage-desc">Verify claims from multiple sources</div>
+                        <div class="agents-row">
+                            <div class="agent-chip" id="a5" style="opacity: 0;">
+                                <div class="agent-name">✓ Fact Checker</div>
+                                <div class="agent-status">⏳ Pending</div>
+                                <div class="agent-finding"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stage">
+                        <div class="stage-icon synthesize">3</div>
+                        <div class="stage-title">Synthesize (reduce_agent)</div>
+                        <div class="stage-desc">Generate final cited report</div>
+                        <div class="agents-row">
+                            <div class="agent-chip" id="a6" style="opacity: 0;">
+                                <div class="agent-name">📝 Synthesizer</div>
+                                <div class="agent-status">⏳ Pending</div>
+                                <div class="agent-finding"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn btn-primary" id="runBtn" onclick="runWorkflow()">▶ Run Research</button>
+            <button class="btn btn-secondary" onclick="stepIt()">⏭ Step</button>
+            <button class="btn btn-secondary" onclick="reset()">↺ Reset</button>
+        </div>
+        
+        <div class="results-panel" id="results">
+            <h2>📋 Research Report: AI Coding Assistants 2026</h2>
+            
+            <div class="report-section">
+                <h3>Executive Summary</h3>
+                <p>AI coding assistants have become essential tools for modern developers. The market has grown 25% YoY to $4.5B, with major players including GitHub Copilot, Cursor, and Claude Code leading innovation. Key developments include 1M token context windows and workflow orchestration capabilities.</p>
+            </div>
+            
+            <div class="report-section">
+                <h3>Key Findings</h3>
+                <p><strong>📈 Market:</strong> 85% of developers now use AI tools, with Fortune 500 adoption at 73%. Average time saved: 2.5 hours per day. <span class="citation">[Industry Survey 2026]</span></p>
+                <p style="margin-top: 12px;"><strong>🔧 Technology:</strong> Context windows expanded to 1M tokens, enabling whole-repo comprehension. Claude Code's workflow feature enables parallel agent orchestration. <span class="citation">[Technical Documentation]</span></p>
+                <p style="margin-top: 12px;"><strong>👥 Expert Consensus:</strong> Productivity gains of 40-60% are common, though experts warn about dependency risks and code quality concerns for critical systems. <span class="citation">[Developer Interviews]</span></p>
+            </div>
+            
+            <div class="report-section">
+                <h3>Confidence Scores</h3>
+                <p><span class="confidence conf-high">✓ Market stats: 92%</span> <span class="confidence conf-high">✓ Tech claims: 88%</span> <span class="confidence conf-medium">⚠ Expert opinions: 75% (some debate)</span></p>
+            </div>
+            
+            <div class="report-section">
+                <h3>Recommendations</h3>
+                <p>1. <strong>Adopt incrementally</strong> - Start with non-critical projects<br>
+                   2. <strong>Maintain code review</strong> - AI is an assistant, not a replacement<br>
+                   3. <strong>Watch for workflow tools</strong> - They enable new complex patterns<br>
+                   4. <strong>Measure productivity</strong> - Track time saved vs. quality</p>
+            </div>
+        </div>
+        
+        <div class="concept-box">
+            <h3>💡 The Key Pattern</h3>
+            <p>Unlike traditional single-agent workflows where the agent coordinates turn-by-turn, the workflow script holds the plan. Intermediate results stay in script variables instead of Claude's context, allowing the final answer to be clean and focused. This enables complex research tasks that would be impractical in a single agent.</p>
+        </div>
+    </div>
+    
+    <script>
+        const steps = [
+            {id:'a1', status:'🔍 Researching...', finding:null, pct:12},
+            {id:'a2', status:'🔍 Researching...', finding:null, pct:18},
+            {id:'a3', status:'🔍 Researching...', finding:null, pct:24},
+            {id:'a4', status:'🔍 Researching...', finding:null, pct:30},
+            {id:'a1', status:'✅ Done', finding:'Market: $4.5B, 25% YoY growth...', pct:40},
+            {id:'a2', status:'✅ Done', finding:'Tech: 1M token contexts...', pct:50},
+            {id:'a3', status:'✅ Done', finding:'Experts: 40-60% productivity gains...', pct:60},
+            {id:'a4', status:'✅ Done', finding:'Stats: 85% devs use AI tools...', pct:70},
+            {id:'a5', status:'🔍 Verifying...', finding:null, pct:78},
+            {id:'a5', status:'✅ Verified', finding:'Cross-checked all claims...', pct:85},
+            {id:'a6', status:'📝 Writing...', finding:null, pct:92},
+            {id:'a6', status:'✅ Complete', finding:'Report ready!', pct:100}
+        ];
+        let step = 0;
+        
+        function runWorkflow() {
+            document.getElementById('runBtn').disabled = true;
+            document.getElementById('runBtn').textContent = '⏳ Running...';
+            let i = step;
+            const iv = setInterval(() => {
+                if (i < steps.length) { exec(steps[i]); i++; }
+                else { clearInterval(iv); showResults(); }
+            }, 700);
+        }
+        
+        function stepIt() {
+            if (step < steps.length) { exec(steps[step]); step++; if (step >= steps.length) showResults(); }
+        }
+        
+        function exec(s) {
+            const el = document.getElementById(s.id);
+            if (!el) return;
+            if (s.status.includes('Done') || s.status.includes('Verified') || s.status.includes('Complete')) {
+                el.classList.remove('active'); el.classList.add('done'); el.style.opacity = '';
+            } else {
+                el.classList.add('active'); el.classList.remove('done');
+            }
+            el.querySelector('.agent-status').textContent = s.status;
+            if (s.finding) el.querySelector('.agent-finding').textContent = s.finding;
+            document.getElementById('progress').style.width = s.pct + '%';
+            document.getElementById('progressLabel').textContent = s.status.includes('Done') ? '✅ ' + s.status : '⚡ ' + s.status;
+        }
+        
+        function showResults() {
+            document.getElementById('progressLabel').textContent = '✅ Research complete!';
+            document.getElementById('runBtn').textContent = '✅ Done';
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('results').scrollIntoView({behavior:'smooth'});
+        }
+        
+        function reset() {
+            step = 0;
+            document.getElementById('progress').style.width = '0%';
+            document.getElementById('progressLabel').textContent = 'Press ▶ Run to start';
+            document.getElementById('runBtn').disabled = false;
+            document.getElementById('runBtn').textContent = '▶ Run Research';
+            document.getElementById('results').style.display = 'none';
+            document.querySelectorAll('.agent-chip').forEach(c => {
+                c.classList.remove('active','done');
+                c.style.opacity = '';
+                c.querySelector('.agent-status').textContent = '⏳ Pending';
+                c.querySelector('.agent-finding').textContent = '';
+            });
+        }
+    </script>
+</body>
+</html>
