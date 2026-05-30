@@ -41,16 +41,16 @@ conversation.run()
 
 ## Explore the Story
 
-### [Comparison Guide](comparison.html)
+### [Comparison Guide](https://rajshah4.github.io/workflow-demos/comparison.html)
 Side-by-side code comparison: what *you* write vs what the *agent* writes.
 
-### [The Bitter Lesson](bitter-lesson.html)
+### [The Bitter Lesson](https://rajshah4.github.io/workflow-demos/bitter-lesson.html)
 The progression: Year 1 (you write the loop) → Year N (model writes everything).
 
-### [The Org Chart](org-chart.html)
+### [The Org Chart](https://rajshah4.github.io/workflow-demos/org-chart.html)
 "Subagents are workers. Workflows are the management system."
 
-### [Stack Overview](index.html)
+### [Stack Overview](https://rajshah4.github.io/workflow-demos/index.html)
 The L1-L4 stack model for agent orchestration.
 
 ---
