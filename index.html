@@ -171,12 +171,16 @@
             background: #1c1917;
             color: #e5e7eb;
             border-radius: 8px;
-            padding: 16px;
+            padding: 20px 24px;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            line-height: 1.6;
-            margin-bottom: 16px;
+            font-size: 0.8125rem;
+            line-height: 1.8;
+            margin: 16px 0;
+            white-space: pre-wrap;
         }
+        
+        .code-comment { color: #9ca3af; }
+        .code-str { color: #a5d6ff; }
         
         .card p {
             font-size: 0.875rem;
@@ -334,21 +338,39 @@
             <div class="card old">
                 <h4>Without Workflows</h4>
                 <div class="code-block">
-agents = [a1, a2, a3]
-results = []
-for agent in agents:
-    result = agent.run()
-    results.append(result)
-synthesize(results)
+<span class="code-comment"># Define prompts</span>
+prompts = {
+    <span class="code-str">"market"</span>: <span class="code-str">"Research market trends..."</span>,
+    <span class="code-str">"tech"</span>: <span class="code-str">"Research tech..."</span>,
+}
+
+<span class="code-comment"># Create agents</span>
+market_agent = Agent(llm, prompts[<span class="code-str">"market"</span>])
+tech_agent = Agent(llm, prompts[<span class="code-str">"tech"</span>])
+
+<span class="code-comment"># Create conversations</span>
+market_conv = Conversation(market_agent)
+tech_conv = Conversation(tech_agent)
+
+<span class="code-comment"># Run SEQUENTIALLY</span>
+market_conv.send_message(<span class="code-str">"Research market"</span>)
+market_result = market_conv.run()
+
+tech_conv.send_message(<span class="code-str">"Research tech"</span>)
+tech_result = tech_conv.run()
+
+<span class="code-comment"># Aggregate yourself</span>
+synth_conv = Conversation(synthesizer)
+synth_conv.send_message(f<span class="code-str">"Combine: {all_results}"</span>)
+report = synth_conv.run()
                 </div>
-                <p>25+ lines. Sequential. Full control.</p>
+                <p>25+ lines. Sequential. You control everything.</p>
             </div>
             <div class="card new">
                 <h4>With Workflows</h4>
                 <div class="code-block">
 send_message(
-  "Research X from"
-  "multiple angles"
+  <span class="code-str">"Research X from multiple angles"</span>
 )
 run()
                 </div>
