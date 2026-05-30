@@ -22,10 +22,10 @@ dotenv_path = Path(__file__).parent.parent / ".env"
 if dotenv_path.exists():
     load_dotenv(dotenv_path)
 
-# Add SDK to path - try multiple locations
+# Add local SDK to path - use sdk-pr3426 from sibling directory
 possible_paths = [
-    Path(__file__).parent.parent / "sdk-demo",
-    Path.home() / "Code" / "sdk-demo",
+    Path(__file__).parent.parent / "sdk-pr3426",
+    Path.home() / "Code" / "sdk-pr3426",
 ]
 
 for sdk_path in possible_paths:
