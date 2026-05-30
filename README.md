@@ -4,6 +4,8 @@
 
 The breakthrough isn't that agents can use other agents. It's that agents can now *write the orchestration loop themselves*.
 
+> Inspired by Claude Code's Dynamic Workflows — built with the [OpenHands SDK](https://github.com/OpenHands/software-agent-sdk) (open source).
+
 ---
 
 ## The Question
