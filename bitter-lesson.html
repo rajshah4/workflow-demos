@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Bitter Lesson - OpenHands SDK</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #fefcf8;
+            color: #374151;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 16px;
+        }
+        
+        .quote {
+            font-size: 1.125rem;
+            color: #6b7280;
+            font-style: italic;
+            margin-bottom: 8px;
+        }
+        
+        .quote-author {
+            font-size: 0.875rem;
+            color: #9ca3af;
+        }
+        
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin: 48px 0;
+        }
+        
+        .year {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 24px;
+            background: #fdfcfa;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+        }
+        
+        .year-num {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: #6366f1;
+            min-width: 60px;
+        }
+        
+        .year-content {
+            flex: 1;
+        }
+        
+        .year-title {
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 4px;
+        }
+        
+        .year-desc {
+            font-size: 0.9375rem;
+            color: #6b7280;
+        }
+        
+        .year.final {
+            background: #ecfdf5;
+            border-color: #22c55e;
+        }
+        
+        .year.final .year-num {
+            color: #22c55e;
+        }
+        
+        .arrow {
+            text-align: center;
+            color: #d1d5db;
+            font-size: 1.25rem;
+        }
+        
+        .punchline {
+            background: #fdfcfa;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 40px;
+            margin-top: 48px;
+            text-align: center;
+        }
+        
+        .punchline h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 20px;
+            border: none;
+            padding: 0;
+        }
+        
+        .punchline p {
+            color: #6b7280;
+            font-size: 1.0625rem;
+        }
+        
+        .punchline .big {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 20px;
+        }
+        
+        footer {
+            margin-top: 64px;
+            padding-top: 32px;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+        
+        footer a {
+            color: #6366f1;
+            text-decoration: none;
+            font-size: 0.9375rem;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>The Bitter Lesson</h1>
+            <p class="quote">"Generic methods leverage computation. Hand-coded knowledge gets overtaken."</p>
+            <p class="quote-author">— Richard Sutton</p>
+        </header>
+        
+        <div class="timeline">
+            <div class="year">
+                <div class="year-num">Year 1</div>
+                <div class="year-content">
+                    <div class="year-title">"We need to orchestrate agents!"</div>
+                    <div class="year-desc">You write the loop. Sequential execution. Manual coordination.</div>
+                </div>
+            </div>
+            
+            <div class="arrow">↓</div>
+            
+            <div class="year">
+                <div class="year-num">Year 2</div>
+                <div class="year-content">
+                    <div class="year-title">"We need reusable workflows!"</div>
+                    <div class="year-desc">LangChain / LangGraph — you write the workflow. More structure, same burden.</div>
+                </div>
+            </div>
+            
+            <div class="arrow">↓</div>
+            
+            <div class="year">
+                <div class="year-num">Year 3</div>
+                <div class="year-content">
+                    <div class="year-title">"We need dynamic workflows!"</div>
+                    <div class="year-desc">Agent writes the orchestration. You describe the goal. Model handles the rest.</div>
+                </div>
+            </div>
+            
+            <div class="arrow">↓</div>
+            
+            <div class="year final">
+                <div class="year-num">Year N</div>
+                <div class="year-content">
+                    <div class="year-title">"Why are we writing frameworks at all?"</div>
+                    <div class="year-desc" style="color: #15803d;">Model writes everything. Frameworks become runtime plumbing.</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="punchline">
+            <h2>The Question</h2>
+            <p class="big">What survives when models write the orchestration?</p>
+            <p>Only the parts models can't write:<br>
+            Runtime infrastructure. Safety guardrails. Tool definitions.</p>
+        </div>
+        
+        <footer>
+            <a href="index.html">← Stack Overview</a>
+            <span style="color: #d1d5db;">&middot;</span>
+            <a href="org-chart.html">The Org Chart →</a>
+        </footer>
+    </div>
+</body>
+</html>

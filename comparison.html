@@ -3,483 +3,378 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workflows vs The Old Way - OpenHands SDK</title>
+    <title>Workflows vs Manual Orchestration - OpenHands SDK</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        :root {
-            --bg: #09090b;
-            --surface: #18181b;
-            --surface-hover: #27272a;
-            --border: #3f3f46;
-            --text: #fafafa;
-            --text-muted: #a1a1aa;
-            --accent: #8b5cf6;
-            --accent-light: #a78bfa;
-            --green: #22c55e;
-            --blue: #3b82f6;
-            --amber: #f59e0b;
-        }
-        
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            min-height: 100vh;
+            background: #fefcf8;
+            color: #374151;
+            line-height: 1.7;
+            font-size: 16px;
         }
         
         .container {
-            max-width: 900px;
+            max-width: 800px;
             margin: 0 auto;
             padding: 60px 24px;
         }
         
-        /* Header */
-        header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-        
         h1 {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 700;
-            letter-spacing: -0.02em;
+            color: #111827;
             margin-bottom: 12px;
+            letter-spacing: -0.02em;
         }
         
         .subtitle {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-        }
-        
-        /* The Ask */
-        .the-ask {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 28px 32px;
+            font-size: 1.125rem;
+            color: #6b7280;
             margin-bottom: 48px;
-            text-align: center;
         }
         
-        .the-ask p {
-            color: var(--text-muted);
-            margin-bottom: 8px;
-            font-size: 0.95rem;
-        }
-        
-        .the-ask .task {
-            font-size: 1.3rem;
+        h2 {
+            font-size: 1.375rem;
             font-weight: 600;
+            color: #111827;
+            margin: 48px 0 20px;
+            padding-top: 24px;
+            border-top: 1px solid #e5e7eb;
         }
         
-        /* Section */
-        .section {
-            margin-bottom: 56px;
-        }
-        
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 20px;
-        }
-        
-        .section-num {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1rem;
-        }
-        
-        .section-num.old { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
-        .section-num.new { background: rgba(34, 197, 94, 0.15); color: var(--green); }
-        
-        .section-title {
-            font-size: 1.4rem;
+        h3 {
+            font-size: 1.125rem;
             font-weight: 600;
+            color: #111827;
+            margin: 32px 0 16px;
         }
         
-        /* Code Block */
-        .code-block {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-        }
-        
-        .code-header {
-            display: flex;
-            align-items: center;
-            padding: 14px 20px;
-            border-bottom: 1px solid var(--border);
-            gap: 12px;
-        }
-        
-        .badge {
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-        
-        .badge.you { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
-        .badge.agent { background: rgba(34, 197, 94, 0.15); color: var(--green); }
-        .badge.desc { color: var(--text-muted); margin-left: auto; }
-        
-        .code-content {
-            padding: 24px;
-            font-family: 'SF Mono', 'Fira Code', monospace;
-            font-size: 0.85rem;
-            line-height: 1.7;
-            background: #000;
-        }
-        
-        .line { display: flex; }
-        .line-num {
-            color: #3f3f46;
-            width: 28px;
-            text-align: right;
-            padding-right: 16px;
-            user-select: none;
-            flex-shrink: 0;
-        }
-        
-        .kw { color: #c678dd; }
-        .fn { color: #61afef; }
-        .str { color: #98c379; }
-        .cm { color: #5c6370; font-style: italic; }
-        .num { color: #d19a66; }
-        .comment-inline { color: #7f848e; }
-        
-        /* What you write */
-        .your-code {
-            background: rgba(139, 92, 246, 0.1);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 12px;
-            padding: 20px 24px;
+        p {
             margin-bottom: 16px;
         }
         
-        .your-code p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-        
-        .your-code strong {
-            color: var(--accent-light);
-        }
-        
-        /* Real code badge */
-        .real-code {
-            background: rgba(34, 197, 94, 0.1);
-            border: 1px solid rgba(34, 197, 94, 0.3);
-            border-radius: 8px;
-            padding: 8px 16px;
-            display: inline-block;
-            font-size: 0.75rem;
-            color: var(--green);
-            margin-bottom: 16px;
-        }
-        
-        /* Problems/Solutions */
-        .outcome {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
+        .lead {
+            font-size: 1.125rem;
+            color: #111827;
+            margin-bottom: 32px;
             padding: 20px 24px;
-            margin-top: 16px;
+            background: #fdfcfa;
+            border-left: 4px solid #6366f1;
+            border-radius: 0 8px 8px 0;
         }
         
-        .outcome-header {
-            font-weight: 600;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .outcome-header.bad { color: #ef4444; }
-        .outcome-header.good { color: var(--green); }
-        
-        .outcome-content {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
-        
-        .outcome-content li {
-            margin: 8px 0;
-        }
-        
-        /* Arrow */
-        .arrow-section {
-            text-align: center;
-            padding: 32px 0;
-            color: var(--text-muted);
-            font-size: 2rem;
-        }
-        
-        /* Summary */
-        .summary {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(34, 197, 94, 0.08));
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 40px;
-            margin-top: 48px;
-            text-align: center;
-        }
-        
-        .summary h2 {
-            font-size: 1.5rem;
-            margin-bottom: 24px;
-        }
-        
-        .summary-grid {
+        .comparison {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 32px;
-            text-align: left;
+            gap: 24px;
+            margin: 32px 0;
         }
         
-        .summary-card h4 {
-            font-size: 1rem;
+        .card {
+            background: #fdfcfa;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 24px;
+        }
+        
+        .card.old {
+            border-top: 3px solid #ef4444;
+        }
+        
+        .card.new {
+            border-top: 3px solid #22c55e;
+        }
+        
+        .card h4 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6b7280;
             margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
         
-        .summary-card ul {
-            list-style: none;
+        .card.old h4 { color: #ef4444; }
+        .card.new h4 { color: #22c55e; }
+        
+        .code-block {
+            background: #1c1917;
+            color: #e5e7eb;
+            border-radius: 8px;
+            padding: 16px 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8125rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 16px 0;
         }
         
-        .summary-card li {
-            padding: 8px 0;
-            color: var(--text-muted);
-            font-size: 0.9rem;
+        .code-comment { color: #9ca3af; }
+        .code-kw { color: #c084fc; }
+        .code-str { color: #a5d6ff; }
+        .code-fn { color: #60a5fa; }
+        .code-num { color: #fbbf24; }
+        
+        .note {
+            background: #fef3c7;
+            border: 1px solid #fcd34d;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 24px 0;
+            font-size: 0.9375rem;
         }
         
-        .check { color: var(--green); }
-        .x { color: #ef4444; }
+        .note strong {
+            color: #92400e;
+        }
+        
+        ul {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .task-box {
+            background: #f3e8ff;
+            border: 1px solid #c084fc;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            margin: 32px 0;
+        }
+        
+        .task-box p {
+            font-size: 0.875rem;
+            color: #7c3aed;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .task-box .task {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .result-box {
+            background: #ecfdf5;
+            border: 1px solid #22c55e;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+        }
+        
+        .result-box h4 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #15803d;
+            margin-bottom: 12px;
+        }
+        
+        .skill-box {
+            background: #fdfcfa;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8125rem;
+        }
+        
+        .skill-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6366f1;
+            margin-bottom: 12px;
+        }
+        
+        .skill-content {
+            color: #374151;
+            line-height: 1.8;
+        }
+        
+        .skill-content .label {
+            color: #6b7280;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        footer {
+            margin-top: 64px;
+            padding-top: 32px;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+        }
+        
+        footer a {
+            color: #6366f1;
+            text-decoration: none;
+            font-size: 0.9375rem;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
         
         @media (max-width: 640px) {
-            .summary-grid { grid-template-columns: 1fr; }
+            .comparison { grid-template-columns: 1fr; }
+            .code-block { font-size: 0.75rem; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>The Difference</h1>
-            <p class="subtitle">What YOU write vs what the AGENT writes for you</p>
-        </header>
+        <h1>Workflows vs Manual Orchestration</h1>
+        <p class="subtitle">What YOU write vs what the AGENT writes for you</p>
         
-        <!-- The Task -->
-        <div class="the-ask">
-            <p>The objective:</p>
+        <div class="task-box">
+            <p>The Objective</p>
             <div class="task">"Research the AI coding assistant market from multiple angles, then synthesize a report"</div>
         </div>
         
-        <!-- OLD WAY -->
-        <div class="section">
-            <div class="section-header">
-                <div class="section-num old">1</div>
-                <div class="section-title">Without Dynamic Workflows</div>
-            </div>
-            
-            <div class="your-code">
-                <p><strong>What YOU write:</strong></p>
-            </div>
+        <!-- Without Workflows -->
+        <h2>Without Dynamic Workflows</h2>
+        
+        <div class="card old">
+            <h4>You Write the Orchestration</h4>
             
             <div class="code-block">
-                <div class="code-header">
-                    <span class="badge you">YOU</span>
-                    <span class="badge desc">Manual orchestration (like LangChain)</span>
-                </div>
-                <div class="code-content">
-                    <div class="line"><span class="line-num">1</span><span class="cm"># Define agent prompts</span></div>
-                    <div class="line"><span class="line-num">2</span>prompts = {</div>
-                    <div class="line"><span class="line-num">3</span>    <span class="str">"market"</span>: <span class="str">"Research market trends..."</span>,</div>
-                    <div class="line"><span class="line-num">4</span>    <span class="str">"tech"</span>: <span class="str">"Research technical developments..."</span>,</div>
-                    <div class="line"><span class="line-num">5</span>}</div>
-                    <div class="line"><span class="line-num">6</span></div>
-                    <div class="line"><span class="line-num">7</span><span class="cm"># Create agents one by one</span></div>
-                    <div class="line"><span class="line-num">8</span>market_agent = Agent(llm, prompts[<span class="str">"market"</span>])</div>
-                    <div class="line"><span class="line-num">9</span>tech_agent = Agent(llm, prompts[<span class="str">"tech"</span>])</div>
-                    <div class="line"><span class="line-num">10</span></div>
-                    <div class="line"><span class="line-num">11</span><span class="cm"># Create conversations</span></div>
-                    <div class="line"><span class="line-num">12</span>market_conv = Conversation(market_agent)</div>
-                    <div class="line"><span class="line-num">13</span>tech_conv = Conversation(tech_agent)</div>
-                    <div class="line"><span class="line-num">14</span></div>
-                    <div class="line"><span class="line-num">15</span><span class="cm"># Run SEQUENTIALLY</span></div>
-                    <div class="line"><span class="line-num">16</span>market_conv.send_message(<span class="str">"Research market"</span>)</div>
-                    <div class="line"><span class="line-num">17</span>market_result = market_conv.run()</div>
-                    <div class="line"><span class="line-num">18</span></div>
-                    <div class="line"><span class="line-num">19</span>tech_conv.send_message(<span class="str">"Research tech"</span>)</div>
-                    <div class="line"><span class="line-num">20</span>tech_result = tech_conv.run()</div>
-                    <div class="line"><span class="line-num">21</span></div>
-                    <div class="line"><span class="line-num">22</span><span class="cm"># Aggregate yourself</span></div>
-                    <div class="line"><span class="line-num">23</span>all_results = [market_result, tech_result]</div>
-                    <div class="line"><span class="line-num">24</span>synth_conv = Conversation(synthesizer)</div>
-                    <div class="line"><span class="line-num">25</span>synth_conv.send_message(f<span class="str">"Combine: {all_results}"</span>)</div>
-                    <div class="line"><span class="line-num">26</span>report = synth_conv.run()</div>
-                    <div class="line"><span class="line-num">27</span></div>
-                    <div class="line"><span class="line-num">28</span><span class="comment-inline"># You wrote 26+ lines. Sequential. Explicit control.</span></div>
-                </div>
+<span class="code-comment"># Define agent prompts</span>
+prompts = {
+    <span class="code-str">"market"</span>: <span class="code-str">"Research market trends..."</span>,
+    <span class="code-str">"tech"</span>: <span class="code-str">"Research tech..."</span>,
+}
+
+<span class="code-comment"># Create agents</span>
+market_agent = Agent(llm, prompts[<span class="code-str">"market"</span>])
+tech_agent = Agent(llm, prompts[<span class="code-str">"tech"</span>])
+
+<span class="code-comment"># Create conversations</span>
+market_conv = Conversation(market_agent)
+tech_conv = Conversation(tech_agent)
+
+<span class="code-comment"># Run SEQUENTIALLY</span>
+market_conv.send_message(<span class="code-str">"Research market"</span>)
+market_result = market_conv.run()
+
+tech_conv.send_message(<span class="code-str">"Research tech"</span>)
+tech_result = tech_conv.run()
+
+<span class="code-comment"># Aggregate yourself</span>
+synth_conv = Conversation(synthesizer)
+synth_conv.send_message(f<span class="code-str">"Combine: {all_results}"</span>)
+report = synth_conv.run()
+
+<span class="code-comment"># You wrote 25+ lines. Sequential. You control.</span>
             </div>
             
-            <div class="outcome">
-                <div class="outcome-header bad">⚠️ You had to write all this</div>
-                <div class="outcome-content">
-                    <li>Define each agent's system prompt</li>
-                    <li>Create each conversation</li>
-                    <li>Manage sequential execution (wait for each)</li>
-                    <li>Aggregate results yourself</li>
-                    <li>Handle errors for each step</li>
-                </div>
-                <p style="margin-top: 16px; font-size: 0.85rem; color: var(--text-muted);">
-                    See also: <a href="https://docs.langchain.com/oss/python/deepagents/deep-research" target="_blank" style="color: #ef4444;">LangChain Deep Research</a> — same pattern, you define the pipeline
-                </p>
+            <ul>
+                <li>Define each agent's system prompt</li>
+                <li>Create each conversation</li>
+                <li>Manage sequential execution (wait for each)</li>
+                <li>Aggregate results yourself</li>
+                <li>Handle errors for each step</li>
+            </ul>
+        </div>
+        
+        <!-- With Workflows -->
+        <h2>With Dynamic Workflows</h2>
+        
+        <div class="card new">
+            <h4>You Write the Objective, Agent Writes the Loop</h4>
+            
+            <div class="code-block">
+<span class="code-comment"># You just give the objective</span>
+conversation.send_message(
+    <span class="code-str">"Research the AI coding assistant market"</span>
+)
+conversation.run()
+
+<span class="code-comment"># Agent generates:</span>
+<span class="code-kw">async def</span> <span class="code-fn">main</span>(wf):
+    angles = [<span class="code-str">"market"</span>, <span class="code-str">"tech"</span>, <span class="code-str">"experts"</span>]
+    
+    findings = <span class="code-kw">await</span> wf.<span class="code-fn">map_agents</span>(
+        <span class="code-str">"researcher"</span>,
+        [f<span class="code-str">"Research {a}"</span> <span class="code-kw">for</span> a <span class="code-kw">in</span> angles],
+        max_concurrency=<span class="code-num">3</span>
+    )
+    
+    <span class="code-kw">return</span> <span class="code-kw">await</span> wf.<span class="code-fn">reduce_agent</span>(
+        <span class="code-str">"synthesizer"</span>, summarize(findings)
+    )
+            </div>
+            
+            <ul>
+                <li>Agent decides: which angles to research</li>
+                <li>Agent decides: how many parallel agents</li>
+                <li>Agent decides: concurrency level</li>
+                <li>Agent decides: how to aggregate results</li>
+                <li>Results stay in workflow (not main context)</li>
+            </ul>
+        </div>
+        
+        <!-- How it works -->
+        <h2>How "workflow" Gets Triggered</h2>
+        
+        <div class="skill-box">
+            <div class="skill-label">SKILL: research_orchestrator</div>
+            <div class="skill-content">
+                <span class="label">When asked to research deeply</span><br>
+                write a Python workflow:<br>
+                &nbsp;&nbsp;(1) fan out web_searcher agents<br>
+                &nbsp;&nbsp;(2) cross-check with fact_checker<br>
+                &nbsp;&nbsp;(3) synthesize with reduce_agent
             </div>
         </div>
         
-        <div class="arrow-section">↓</div>
+        <p>The agent has a <strong>skill</strong> that tells it when/how to use workflows. When the task benefits from parallel agents, the agent writes a workflow script using <code>wf.map_agents()</code>, <code>wf.reduce_agent()</code>, etc.</p>
         
-        <!-- NEW WAY -->
-        <div class="section">
-            <div class="section-header">
-                <div class="section-num new">2</div>
-                <div class="section-title">With Dynamic Workflows</div>
+        <!-- Bottom line -->
+        <h2>The Bottom Line</h2>
+        
+        <div class="comparison">
+            <div class="card old">
+                <h4>Manual Orchestration</h4>
+                <ul>
+                    <li>You write the control flow</li>
+                    <li>25+ lines of code</li>
+                    <li>Sequential execution</li>
+                    <li>Results flood context</li>
+                    <li>Manual error handling</li>
+                </ul>
             </div>
-            
-            <div class="your-code" style="background: rgba(34, 197, 94, 0.1); border-color: var(--green);">
-                <p><strong>What YOU write (actual SDK code):</strong></p>
-            </div>
-            
-            <div class="code-block">
-                <div class="code-header">
-                    <span class="badge you">YOU</span>
-                    <span class="badge desc">Real OpenHands SDK code</span>
-                    <span class="real-code">✓ From demo</span>
-                </div>
-                <div class="code-content">
-                    <div class="line"><span class="line-num">1</span><span class="cm"># Set up parent agent with WorkflowToolSet</span></div>
-                    <div class="line"><span class="line-num">2</span>parent_agent = Agent(</div>
-                    <div class="line"><span class="line-num">3</span>    llm,</div>
-                    <div class="line"><span class="line-num">4</span>    tools=[Tool(name=WorkflowToolSet.name)],  <span class="comment-inline">← Agent has workflow tool</span></div>
-                    <div class="line"><span class="line-num">5</span>)</div>
-                    <div class="line"><span class="line-num">6</span></div>
-                    <div class="line"><span class="line-num">7</span>conversation = Conversation(parent_agent)</div>
-                    <div class="line"><span class="line-num">8</span></div>
-                    <div class="line"><span class="line-num">9</span><span class="cm"># Give the objective</span></div>
-                    <div class="line"><span class="line-num">10</span>conversation.send_message(</div>
-                    <div class="line"><span class="line-num">11</span>    <span class="str">"Research the AI coding assistant market from multiple</span></div>
-                    <div class="line"><span class="line-num">12</span>    <span class="str">">angles, then synthesize a report"</span></div>
-                    <div class="line"><span class="line-num">13</span>)</div>
-                    <div class="line"><span class="line-num">14</span>conversation.run()</div>
-                </div>
-            </div>
-            
-            <div class="outcome" style="border-color: var(--accent); margin-top: 24px;">
-                <div class="outcome-header" style="color: var(--accent-light);">🔑 How "workflow" gets triggered</div>
-                <div class="outcome-content">
-                    <p style="margin-bottom: 12px;">The agent has a <strong>skill</strong> that tells it when/how to use workflows:</p>
-                    <div class="code-block" style="margin: 12px 0;">
-                        <div class="code-header">
-                            <span class="badge" style="background: rgba(139, 92, 246, 0.2); color: var(--accent-light);">SKILL</span>
-                            <span class="badge desc">research_orchestrator</span>
-                        </div>
-                        <div class="code-content" style="font-size: 0.8rem;">
-                            <div class="line"><span class="line-num">1</span><span class="kw">When asked to research deeply</span></div>
-                            <div class="line"><span class="line-num">2</span>write a Python workflow:</div>
-                            <div class="line"><span class="line-num">3</span>  (1) fan out web_searcher agents</div>
-                            <div class="line"><span class="line-num">4</span>  (2) cross-check with fact_checker</div>
-                            <div class="line"><span class="line-num">5</span>  (3) synthesize with reduce_agent</div>
-                        </div>
-                    </div>
-                    <p style="font-size: 0.85rem;">The skill tells the agent: "When you see a research task, use <code>wf.map_agents()</code> for fan-out"</p>
-                </div>
-            </div>
-            
-            <div class="your-code" style="margin-top: 20px;">
-                <p><strong>What the AGENT generates (the workflow it writes):</strong></p>
-            </div>
-            
-            <div class="code-block">
-                <div class="code-header">
-                    <span class="badge agent">AGENT</span>
-                    <span class="badge desc">Auto-generated orchestration</span>
-                </div>
-                <div class="code-content">
-                    <div class="line"><span class="line-num">1</span><span class="kw">async def</span> <span class="fn">main</span>(wf):</div>
-                    <div class="line"><span class="line-num">2</span>    </div>
-                    <div class="line"><span class="line-num">3</span>    <span class="cm"># Agent decides: what angles, how many agents</span></div>
-                    <div class="line"><span class="line-num">4</span>    angles = [<span class="str">"market"</span>, <span class="str">"tech"</span>, <span class="str">"experts"</span>]</div>
-                    <div class="line"><span class="line-num">5</span>    </div>
-                    <div class="line"><span class="line-num">6</span>    <span class="cm"># Agent decides: parallel execution with map_agents</span></div>
-                    <div class="line"><span class="line-num">7</span>    findings = <span class="kw">await</span> wf.<span class="fn">map_agents</span>(</div>
-                    <div class="line"><span class="line-num">8</span>        <span class="str">"researcher"</span>,</div>
-                    <div class="line"><span class="line-num">9</span>        [f<span class="str">"Research {a}"</span> <span class="kw">for</span> a <span class="kw">in</span> angles],</div>
-                    <div class="line"><span class="line-num">10</span>        max_concurrency=<span class="num">3</span></div>
-                    <div class="line"><span class="line-num">11</span>    )</div>
-                    <div class="line"><span class="line-num">12</span>    </div>
-                    <div class="line"><span class="line-num">13</span>    <span class="cm"># Agent decides: how to synthesize</span></div>
-                    <div class="line"><span class="line-num">14</span>    <span class="kw">return</span> <span class="kw">await</span> wf.<span class="fn">reduce_agent</span>(</div>
-                    <div class="line"><span class="line-num">15</span>        <span class="str">"synthesizer"</span>, summarize(findings))</div>
-                    <div class="line"><span class="line-num">16</span></div>
-                    <div class="line"><span class="line-num">17</span>    <span class="comment-inline"># Parallel. Checkpointed. Isolated. Done.</span></div>
-                </div>
-            </div>
-            
-            <div class="outcome" style="border-color: var(--green);">
-                <div class="outcome-header good">✓ The agent writes the orchestration</div>
-                <div class="outcome-content">
-                    <li>Agent decides: which angles to research</li>
-                    <li>Agent decides: how many parallel agents</li>
-                    <li>Agent decides: concurrency level</li>
-                    <li>Agent decides: how to aggregate results</li>
-                    <li>Results stay in workflow (not main context)</li>
-                </div>
+            <div class="card new">
+                <h4>Dynamic Workflows</h4>
+                <ul>
+                    <li>Agent writes the control flow</li>
+                    <li>2 lines of your code</li>
+                    <li>Parallel execution</li>
+                    <li>Results isolated</li>
+                    <li>Built-in checkpointing</li>
+                </ul>
             </div>
         </div>
         
-        <!-- Summary -->
-        <div class="summary">
-            <h2>The Bottom Line</h2>
-            <div class="summary-grid">
-                <div class="summary-card">
-                    <h4>🔧 Without Workflows</h4>
-                    <ul>
-                        <li><span class="x">✗</span> You write the control flow</li>
-                        <li><span class="x">✗</span> 25+ lines of code</li>
-                        <li><span class="x">✗</span> Sequential execution</li>
-                        <li><span class="x">✗</span> Results flood context</li>
-                        <li><span class="x">✗</span> Manual error handling</li>
-                    </ul>
-                </div>
-                <div class="summary-card">
-                    <h4>⚡ With Workflows</h4>
-                    <ul>
-                        <li><span class="check">✓</span> Agent writes the control flow</li>
-                        <li><span class="check">✓</span> 2 lines of your code</li>
-                        <li><span class="check">✓</span> Parallel execution</li>
-                        <li><span class="check">✓</span> Results isolated</li>
-                        <li><span class="check">✓</span> Built-in checkpointing</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div style="margin-top: 32px; text-align: center;">
-                <a href="deep_research/deep_research.py" style="display: inline-block; padding: 12px 24px; background: var(--green); color: #000; border-radius: 10px; text-decoration: none; font-weight: 600;">
-                    View Actual SDK Demo Code →
-                </a>
-            </div>
+        <div class="note">
+            <strong>Like LangChain's Deep Research:</strong> Manual orchestration where you define the pipeline. Dynamic workflows shift the orchestration burden to the agent.
         </div>
+        
+        <footer>
+            <a href="https://github.com/OpenHands/software-agent-sdk/pull/3426">PR #3426 - Dynamic Workflow Tool</a>
+            &nbsp;&middot;&nbsp;
+            <a href="index.html">Stack Overview</a>
+        </footer>
     </div>
 </body>
 </html>

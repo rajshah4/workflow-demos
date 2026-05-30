@@ -1,130 +1,90 @@
-# Dynamic Workflows Demo - OpenHands SDK
+# Dynamic Workflows Demo
 
-**PR #3426: When agents write their own orchestration code**
+**When agents write their own orchestration code.**
 
-## The Key Insight
+The breakthrough isn't that agents can use other agents. It's that agents can now *write the orchestration loop themselves*.
 
-> "Subagents are workers. Workflows are the management system."
+---
 
-The breakthrough isn't that agents can use other agents. It's that **agents can now write the orchestration loop themselves**.
+## The Question
 
-## Manual vs Dynamic
+Everyone's building multi-agent systems. Most of them are secretly a mess:
 
-| | Manual (No Workflows) | Dynamic (Workflows) |
-|---|---|---|
-| **Example** | [LangChain Deep Research](https://docs.langchain.com/oss/python/deepagents/deep-research) | [Claude Code Dynamic Workflows](https://claude.com/blog/introducing-dynamic-workflows-in-claude-code) |
-| **Who writes loop** | You (developer) | Agent (at runtime) |
-| **Code you write** | 25+ lines of orchestration | 2 lines (the objective) |
-| **Parallelism** | Manual | Native via `wf.map_agents()` |
+- Sub-agents pollute the main context
+- Parallelism requires manual orchestration
+- You end up writing more framework than code
 
-## How It Works
+**The interesting question isn't "can agents use other agents?" It's *where the orchestration logic lives*.**
 
-```
-┌─────────────────────────────────────────────────────┐
-│ YOU                                               │
-│  - Create parent agent with WorkflowToolSet        │
-│  - Give the objective                             │
-└──────────────────────┬────────────────────────────┘
-                       │ "Research X from multiple angles"
-                       ▼
-┌─────────────────────────────────────────────────────┐
-│ PARENT AGENT                                      │
-│  - Has skill: "research_orchestrator"             │
-│  - Decides: use workflow for multi-angle research │
-│  - Writes: async def main(wf): ...                │
-└──────────────────────┬────────────────────────────┘
-                       │ WorkflowAction(script)
-                       ▼
-┌─────────────────────────────────────────────────────┐
-│ WORKFLOW EXECUTION                                 │
-│  - wf.map_agents("researcher", angles)            │
-│  - Parallel execution                             │
-│  - wf.reduce_agent("synthesizer", findings)       │
-│  - Results isolated from main context             │
-└─────────────────────────────────────────────────────┘
-```
+---
 
-## The Skill That Triggers Workflows
+## The Pattern
 
-The agent knows when to use workflows via a **skill**:
+| Approach | You Write | Agent Writes |
+|----------|-----------|--------------|
+| **Manual** (LangChain style) | The loop, the agents, the aggregation | Nothing |
+| **Dynamic** (Workflows) | Just the objective | The entire orchestration |
 
 ```python
-Skill(
-    name="research_orchestrator",
-    content=(
-        "When asked to research a topic deeply, write a Python workflow: "
-        "(1) fan out web_searcher agents across multiple angles, "
-        "(2) cross-check with fact_checker, "
-        "(3) use reduce_agent with synthesizer for final report."
-    ),
-)
+# Without Workflows: 25+ lines
+market_agent = Agent(llm, "Research market...")
+tech_agent = Agent(llm, "Research tech...")
+# ... you manage everything
+
+# With Workflows: 2 lines
+conversation.send_message("Research X from multiple angles")
+conversation.run()
+# Agent writes: async def main(wf): ... map_agents() ... reduce_agent()
 ```
 
-## Files
+---
 
-```
-workflow-demos/
-├── index.html                    # Landing page with stack overview
-├── comparison.html               # Side-by-side: Manual vs Dynamic
-├── README.md                     # This file
-├── .env                          # Your API key (create this)
-├── deep_research/
-│   ├── deep_research.py          # SDK demo (real code)
-│   └── deep_research_visual.html # Animated visualization
-└── multi_expert_review/
-    ├── multi_expert_review.py    # SDK demo (real code)
-    └── multi_expert_review_visual.html
-```
+## Explore the Story
+
+### [Comparison Guide](comparison.html)
+Side-by-side code comparison: what *you* write vs what the *agent* writes.
+
+### [The Bitter Lesson](bitter-lesson.html)
+The progression: Year 1 (you write the loop) → Year N (model writes everything).
+
+### [The Org Chart](org-chart.html)
+"Subagents are workers. Workflows are the management system."
+
+### [Stack Overview](index.html)
+The L1-L4 stack model for agent orchestration.
+
+---
 
 ## Quick Start
 
 ```bash
-# 1. Add your API key
+# Add your API key
 echo "OPENAI_API_KEY=sk-..." > .env
 
-# 2. Run the demo
-cd ~/Code/workflow-demos
+# Run the demo
 python deep_research/deep_research.py "What is the AI coding assistant market size?"
-
-# 3. Or open in browser (no API key needed)
-open index.html
-open comparison.html
 ```
 
-## The Two Patterns
+Or just open any of the HTML pages in a browser — no API key needed for the demos.
 
-### Without Workflows (Manual)
-```python
-# You write: agents, conversations, loop, aggregation
-market_agent = Agent(llm, "Research market...")
-tech_agent = Agent(llm, "Research tech...")
+---
 
-market_conv = Conversation(market_agent)
-tech_conv = Conversation(tech_agent)
+## The Primitives Stack
 
-market_result = market_conv.run()  # Wait
-tech_result = tech_conv.run()      # Wait
+Before dynamic workflows, there were two other patterns:
 
-# Aggregate yourself
-synthesize([market_result, tech_result])
-```
+| Primitive | Limitation |
+|-----------|------------|
+| **Subagents** | Can't talk to each other, main agent is bottleneck |
+| **Agent Teams** | Top out at 3-5 teammates, sessions die with interruption |
 
-### With Workflows (Dynamic)
-```python
-# You write: just the objective
-conversation.send_message(
-    "Research X from multiple angles, then synthesize"
-)
-conversation.run()
+Dynamic workflows solve both: up to 16 concurrent agents, 1,000 total per workflow, with context isolation.
 
-# Agent writes the workflow:
-# async def main(wf):
-#     findings = await wf.map_agents("researcher", angles)
-#     return await wf.reduce_agent("synthesizer", findings)
-```
+---
 
 ## Resources
 
+- [OpenHands SDK](https://github.com/OpenHands/software-agent-sdk)
+- [PR #3426: Dynamic Workflow Tool](https://github.com/OpenHands/software-agent-sdk/pull/3426)
 - [Claude Code: Dynamic Workflows](https://claude.com/blog/introducing-dynamic-workflows-in-claude-code)
 - [LangChain: Deep Research (manual pattern)](https://docs.langchain.com/oss/python/deepagents/deep-research)
-- [OpenHands SDK PR #3426](https://github.com/OpenHands/software-agent-sdk/pull/3426)
