@@ -13,7 +13,7 @@ As models improve, they can now *write the orchestration loop themselves*. This 
 
 ## The Problem
 
-Building multi-agent systems today means manually orchestrating sub-agents. You write the loops, manage state, and coordinate everything.
+Building multi-agent systems today means **manually orchestrating sub-agents**. You write the loops, manage state, and coordinate everything.
 
 [See the Old Way →](old-way.html)
 
@@ -21,7 +21,7 @@ Building multi-agent systems today means manually orchestrating sub-agents. You 
 
 ## The Solution
 
-What if the model wrote its own orchestration? With workflows, you give the model a task and the tools. The model decides how to structure the workflow.
+What if the model wrote its own orchestration? With workflows, you **give the model a task and the tools**. The model decides how to structure the workflow.
 
 ```python
 # Without Workflows: 25+ lines
@@ -41,13 +41,13 @@ conversation.run()
 
 ## Deep Research Example
 
-Anthropic used deep research as their example. Here's our version using OpenHands workflows.
+Anthropic used deep research as their example. Here's **our version** using OpenHands workflows.
 
 [See the Deep Research Demo →](deep_research/comparison.html)
 
 ### The Key Parts
 
-**1. Skills** — Tell the model when and how to use workflows.
+**1. Skills** — Tell the model **when and how to use workflows**.
 
 ```python
 ORCHESTRATOR_SKILL = {
@@ -61,7 +61,7 @@ When asked to research deeply:
 }
 ```
 
-**2. Sub-Agents** — Pre-defined roles the model can use.
+**2. Sub-Agents** — **Pre-defined roles** the model can use.
 
 ```python
 register_agent_if_absent("web_searcher", create_web_searcher, "Searches the web")
@@ -79,6 +79,8 @@ async def main(wf):
     verified = await wf.map_agents(market_data, 'fact_checker')
     return await wf.reduce_agent(verified, 'synthesizer')
 ```
+
+**The model handles: which angles to research, which sub-agents to use when, parallel vs sequential execution, how to aggregate results.**
 
 ---
 
