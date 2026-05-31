@@ -21,4 +21,5 @@ RUN pip install uv && \
     uv pip install --system -e openhands-tools/ && \
     uv pip install --system python-dotenv
 
-CMD ["python3", "deep_research/deep_research.py"]
+# Default: run the workflow version (NEW WAY)
+CMD ["python3", "deep_research/deep_research_workflow.py"]

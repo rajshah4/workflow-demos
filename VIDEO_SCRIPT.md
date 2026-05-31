@@ -33,39 +33,57 @@
 >
 > "The problem isn't that agents can't use other agents. That's been possible for years. The problem is: **who writes the orchestration code?**"
 
-**[Cut to: Code example - traditional multi-agent]**
+**[Cut to: deep_research_manual.py code on screen]**
+
+> "Here's `deep_research_manual.py` — the OLD WAY to build a deep research workflow."
+>
+> "Look at all the code YOU have to write. Let me walk through it:"
 
 ```python
-# This is what everyone writes today
-from openhands.sdk import Agent, Conversation
+# deep_research_manual.py - THE OLD WAY
 
-prompts = {
-    "market": "Research market trends...",
-    "tech": "Research technology developments...",
-    "legal": "Research legal considerations...",
-    "competitors": "Research competitor strategies...",
-}
+# YOU define research angles
+RESEARCH_ANGLES = [
+    "Market overview and major players",
+    "Technical developments",
+    "Expert opinions",
+    "Statistics",
+    "Concerns"
+]
 
-# Create agents
-agents = {name: Agent(llm, prompts[name]) for name in prompts}
+# YOU create the research results list
+research_results = []
 
-# Create conversations
-conversations = {name: Conversation(agent) for name, agent in agents.items()}
+# YOU write the loop
+for i, angle in enumerate(RESEARCH_ANGLES):
+    # YOU create the conversation
+    research_agent = create_research_agent(llm)
+    conv = LocalConversation(agent=research_agent, workspace="/tmp")
+    
+    # YOU send the message
+    conv.send_message(f"Research: {angle}")
+    
+    # YOU run it
+    conv.run()
+    
+    # YOU extract the result
+    result = conv.state.events[-1].content
+    research_results.append(result)
+    
+    # YOU close the conversation
+    conv.close()
 
-# Run SEQUENTIALLY (because you wrote the loop)
-results = {}
-for name, conv in conversations.items():
-    conv.send_message(f"Research {name}")
-    result = conv.run()
-    results[name] = result
+# YOU repeat for verification
+for angle, result in zip(RESEARCH_ANGLES, research_results):
+    # ... another loop ...
 
-# Aggregate yourself
+# YOU aggregate manually
 synth_conv = Conversation(synthesizer)
-synth_conv.send_message(f"Combine all research: {results}")
+synth_conv.send_message(f"Combine: {research_results}")
 final_report = synth_conv.run()
 ```
 
-> "Look at this code. It's not bad code — it's actually well-structured. But notice who wrote it: **me**. I wrote the loop. I wrote the sequential execution. I wrote the aggregation."
+> "This is `deep_research_manual.py`. Look at all the loops YOU write. Each one is 10+ lines."
 >
 > "And here's the thing — I have to write this same pattern for **every single project**. Market research? Write the loop. Code review? Write the loop. Data analysis? Write the loop."
 
@@ -76,15 +94,15 @@ final_report = synth_conv.run()
 
 > "Now, let's count the problems with this approach:"
 >
-> "**Problem 1: It's sequential by default.** I have to explicitly write code to run things in parallel. And parallel execution? That's hard. You need thread pools, async handlers, result aggregation..."
+> "**Problem 1: It's sequential by default.** The loop runs one at a time. I have to manually parallelize if I want concurrency."
 >
-> "**Problem 2: You control the loop.** Not the agent. The agent is just a worker. It doesn't know it's part of a larger workflow."
+> "**Problem 2: You control the loop.** Not the agent. The agent is just a worker executing tasks you assign."
 >
-> "**Problem 3: Every project repeats this.** The orchestration code looks the same across projects. The only thing that changes is the prompts and the sub-agent types."
+> "**Problem 3: Every project repeats this.** The orchestration code looks the same across projects. The only thing that changes is the prompts."
 >
-> "**Problem 4: It's fragile.** Want to add a new research angle? You modify the loop. Want to change the aggregation? You modify the loop. The loop becomes this massive piece of code you have to maintain."
+> "**Problem 4: It's fragile.** Want to add a new research angle? You modify the loop. Want to change the aggregation? You modify the loop."
 >
-> "**Problem 5: The agent doesn't learn.** Each time you run this, the agent starts fresh. It doesn't learn from previous orchestrations because you're the one orchestrating, not the agent."
+> "**Problem 5: The agent doesn't learn.** Each time you run this, the agent starts fresh. It doesn't adapt its orchestration."
 
 ### 2.3 The Mental Model
 **Duration: 1 minute**
@@ -132,34 +150,40 @@ final_report = synth_conv.run()
 ### 3.2 Show the New Code
 **Duration: 2 minutes**
 
-**[On screen: The two-line version vs. the 40-line version]**
+**[On screen: deep_research_workflow.py code]**
+
+> "Here's `deep_research_workflow.py` — the NEW WAY."
+>
+> "This is the entire orchestration code. Let me show you the key parts:"
 
 ```python
-# THE NEW WAY - What YOU write:
-from openhands.sdk import Agent, Conversation
-from openhands.tools.workflow import WorkflowToolSet
+# deep_research_workflow.py - THE NEW WAY
 
+# Register sub-agent types (ONLY once, not in the workflow)
+register_agent_if_absent("web_searcher", create_web_searcher, "Searches the web")
+register_agent_if_absent("fact_checker", create_fact_checker, "Cross-checks claims")
+register_agent_if_absent("synthesizer", create_synthesizer, "Creates reports")
+
+# Create parent agent with workflow tool
 parent_agent = Agent(
-    llm=llm,
-    tools=[Tool(name=WorkflowToolSet.name)],  # ← THE TOOL
-    agent_context=AgentContext(skills=[
-        Skill(name="orchestrator", content=(
-            "When asked to research deeply, write a workflow using "
-            "wf.map_agents() for parallel research and "
-            "wf.reduce_agent() for synthesis."
-        ))
-    ])
+    llm=LLM(model="gpt-4o-mini"),
+    tools=[Tool(name=WorkflowToolSet.name)],  # <-- THE MAGIC
+    agent_context=AgentContext(...)
 )
 
+# Send the task
 conversation = Conversation(agent=parent_agent)
-conversation.send_message("Research the AI coding assistant market")
-conversation.run()
+conversation.send_message("Research the AI coding assistant market deeply...")
+
+# THE AGENT WRITES THE ORCHESTRATION
+result = conversation.run()
 ```
 
-> "This is it. This is the entire orchestration code. 12 lines."
+> "This is 15 lines. But the real difference is what happens next."
 >
-> "The agent receives the task, decides it needs to research multiple angles in parallel, and writes the orchestration code to make that happen."
+> "The agent receives the task, decides to write a workflow, and calls `wf.map_agents()` and `wf.reduce_agent()`."
 >
+> "Watch what it writes..."
 > "What does the agent write? Let me show you."
 
 ### 3.3 What the Agent Writes
@@ -271,14 +295,19 @@ async def main(wf):
 >
 > "The agent will research this from multiple angles in parallel, cross-check the findings, and synthesize a report."
 
-### 4.2 Run the Demo
+### 4.2 Run the Demo (WORKFLOW - NEW WAY)
 **Duration: 5 minutes**
 
 **[On screen: Terminal output scrolling]**
 
+> "First, let me show you the NEW WAY — using the workflow."
+>
+> "This runs `deep_research_workflow.py` where the agent writes the orchestration."
+
 ```bash
+# Run the WORKFLOW version (agent writes the loop)
 docker run --rm workflow-demo \
-    python3 deep_research/deep_research.py \
+    python3 deep_research/deep_research_workflow.py \
     "What is the AI coding assistant market size in 2024?"
 ```
 
@@ -294,7 +323,31 @@ docker run --rm workflow-demo \
 >
 > "And finally, the synthesizer is creating the report..."
 
-### 4.3 Show the Results
+### 4.3 Run the Demo (MANUAL - OLD WAY for comparison)
+**Duration: 2 minutes**
+
+**[On screen: Manual version output]**
+
+> "Now let me show you what the OLD WAY looks like — `deep_research_manual.py`."
+>
+> "Notice how YOU have to run each step manually. The loops are visible in the code."
+
+```bash
+# Run the MANUAL version (you write the loop)
+docker run --rm workflow-demo \
+    python3 deep_research/deep_research_manual.py \
+    "What is the AI coding assistant market size in 2024?"
+```
+
+> "[Compare the two outputs side by side if possible]"
+>
+> "Manual: You see the loops in the code. You see sequential execution."
+>
+> "Workflow: The agent wrote the loops. You see parallel execution."
+>
+> "Same result, completely different approach."
+
+### 4.4 Show the Results
 **Duration: 2 minutes**
 
 **[On screen: Final report output]**
