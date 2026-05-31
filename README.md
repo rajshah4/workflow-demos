@@ -45,16 +45,22 @@ conversation.run()
 
 ## Explore the Story
 
-### [Comparison Guide](https://rajshah4.github.io/workflow-demos/comparison.html)
-Side-by-side code comparison: what *you* write vs what the *agent* writes.
+### [The Old Way](old-way.html)
+Manual orchestration — you write the loop, manage state, coordinate everything.
 
-### [The Bitter Lesson](https://rajshah4.github.io/workflow-demos/bitter-lesson.html)
+### [The New Way](new-way.html)
+Agent-written orchestration — you write the setup, the agent writes the loop.
+
+### [Side-by-Side Comparison](comparison.html)
+See both approaches with code examples side by side.
+
+### [The Bitter Lesson](bitter-lesson.html)
 The progression: Year 1 (you write the loop) → Year N (model writes everything).
 
-### [The Org Chart](https://rajshah4.github.io/workflow-demos/org-chart.html)
+### [The Org Chart](org-chart.html)
 "Subagents are workers. Workflows are the management system."
 
-### [Stack Overview](https://rajshah4.github.io/workflow-demos/index.html)
+### [Stack Overview](index.html)
 The L1-L4 stack model for agent orchestration.
 
 ---

@@ -235,6 +235,11 @@
 </head>
 <body>
     <div class="container">
+        <div class="note" style="background: #faf5ff; border-color: #e9d5ff; margin-bottom: 32px;">
+            <strong style="color: #7c3aed;">⚠️ About this implementation:</strong>
+            <span style="color: #6b21a8;">This is the OpenHands SDK's implementation, inspired by Claude Code's Dynamic Workflows. We don't know exactly how Anthropic implements it — this is our interpretation using open source tools.</span>
+        </div>
+        
         <h1>Workflows vs Manual Orchestration</h1>
         <p class="subtitle">What YOU write vs what the AGENT writes for you</p>
         
@@ -369,6 +374,15 @@ conversation.run()
         
         <div class="note">
             <strong>Like LangChain's Deep Research:</strong> Manual orchestration where you define the pipeline. Dynamic workflows shift the orchestration burden to the agent.
+        </div>
+        
+        <div style="display: flex; gap: 16px; margin-top: 32px;">
+            <a href="old-way.html" style="flex: 1; padding: 16px 24px; background: #fef2f2; color: #ef4444; border: 1px solid #fecaca; border-radius: 8px; text-decoration: none; text-align: center; font-weight: 500;">
+                ← See the Old Way
+            </a>
+            <a href="new-way.html" style="flex: 1; padding: 16px 24px; background: #ecfdf5; color: #16a34a; border: 1px solid #bbf7d0; border-radius: 8px; text-decoration: none; text-align: center; font-weight: 500;">
+                See the New Way →
+            </a>
         </div>
         
         <footer>

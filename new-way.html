@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Way: Agent-Written Orchestration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #fefcf8;
+            color: #374151;
+            line-height: 1.7;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 16px;
+        }
+        
+        .badge-new {
+            background: #ecfdf5;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 16px;
+        }
+        
+        .subtitle {
+            font-size: 1.125rem;
+            color: #6b7280;
+            margin-bottom: 32px;
+        }
+        
+        h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+            margin: 40px 0 16px;
+            padding-top: 24px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .lead {
+            background: #ecfdf5;
+            border: 1px solid #bbf7d0;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 32px;
+        }
+        
+        .lead p {
+            color: #166534;
+        }
+        
+        .code-block {
+            background: #1c1917;
+            color: #e5e7eb;
+            border-radius: 12px;
+            padding: 24px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8125rem;
+            line-height: 1.8;
+            overflow-x: auto;
+            margin: 24px 0;
+        }
+        
+        .code-comment { color: #9ca3af; }
+        .code-keyword { color: #f472b6; }
+        .code-string { color: #a5d6ff; }
+        .code-function { color: #fbbf24; }
+        .code-variable { color: #34d399; }
+        .code-number { color: #fb923c; }
+        
+        .highlight-line {
+            background: rgba(34, 197, 94, 0.2);
+            display: block;
+            margin: -24px;
+            padding: 24px;
+            border-left: 4px solid #22c55e;
+        }
+        
+        .agent-writes {
+            background: #ecfdf5;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 24px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .agent-writes .icon {
+            font-size: 1.5rem;
+        }
+        
+        .agent-writes p {
+            color: #166534;
+            font-weight: 500;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin: 32px 0;
+        }
+        
+        .stat {
+            background: #fdfcfa;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #22c55e;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            text-transform: uppercase;
+        }
+        
+        .flow {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 24px;
+            margin: 24px 0;
+        }
+        
+        .flow h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .flow-steps {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .flow-step {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .flow-step.you { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
+        .flow-step.agent { background: #dcfce7; color: #16a34a; border: 1px solid #bbf7d0; }
+        .flow-step.wf { background: #fef3c7; color: #d97706; border: 1px solid #fde68a; }
+        .flow-step.sub { background: #e0e7ff; color: #4f46e5; border: 1px solid #c7d2fe; }
+        
+        .flow-arrow { color: #9ca3af; font-size: 1.25rem; }
+        
+        .skill-box {
+            background: #faf5ff;
+            border: 1px solid #e9d5ff;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 24px 0;
+        }
+        
+        .skill-box h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #7c3aed;
+            margin-bottom: 12px;
+        }
+        
+        .skill-box p {
+            color: #6b21a8;
+            font-size: 0.9375rem;
+        }
+        
+        .skill-box code {
+            background: #f3e8ff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.8125rem;
+        }
+        
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6b7280;
+            margin: 32px 0 12px;
+        }
+        
+        .agent-decides {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+        
+        .agent-decides h4 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #92400e;
+            margin-bottom: 12px;
+        }
+        
+        .agent-decides ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .agent-decides li {
+            color: #a16207;
+            padding: 8px 0;
+            border-bottom: 1px solid #fcd34d;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .agent-decides li:last-child {
+            border-bottom: none;
+        }
+        
+        .angle-num {
+            background: #f59e0b;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 16px;
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .nav-links a {
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .nav-links .prev {
+            background: #fef2f2;
+            color: #ef4444;
+            border: 1px solid #fecaca;
+        }
+        
+        .nav-links .prev:hover {
+            background: #fee2e2;
+        }
+        
+        .nav-links .next {
+            background: #dcfce7;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+        
+        .nav-links .next:hover {
+            background: #bbf7d0;
+        }
+        
+        .comparison-box {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 24px 0;
+        }
+        
+        .comparison-box h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .comparison-row {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .comparison-row:last-child {
+            border-bottom: none;
+        }
+        
+        .comparison-row .old {
+            color: #ef4444;
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+        
+        .comparison-row .new {
+            color: #22c55e;
+        }
+        
+        @media (max-width: 640px) {
+            .stats { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <span class="badge badge-new">The New Way</span>
+        <h1>Agent-Written Orchestration</h1>
+        <p class="subtitle">You write the setup. The agent writes the loop.</p>
+        
+        <div class="lead">
+            <p><strong>The breakthrough:</strong> Instead of you writing the orchestration code, you give the agent a tool that lets it write the orchestration code. The agent decides how to structure the workflow based on the question.</p>
+        </div>
+        
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value">~20</div>
+                <div class="stat-label">Lines of code</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">Parallel</div>
+                <div class="stat-label">By default</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">Agent</div>
+                <div class="stat-label">Controls the loop</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">Adapts</div>
+                <div class="stat-label">Per question</div>
+            </div>
+        </div>
+        
+        <h2>The Code You Write</h2>
+        
+        <div class="code-block">
+<span class="code-comment"># deep_research_workflow.py - THE NEW WAY</span>
+<span class="code-comment"># ⚠️ This is the OpenHands SDK implementation, not Anthropic's</span>
+
+<span class="code-comment"># ===========================================</span>
+<span class="code-comment"># STEP 1: Register sub-agents (build the team)</span>
+<span class="code-comment"># ===========================================</span>
+<span class="code-comment"># Define what each role can do - done once</span>
+register_agent_if_absent(<span class="code-string">"web_searcher"</span>, create_web_searcher, <span class="code-string">"Searches the web"</span>)
+register_agent_if_absent(<span class="code-string">"fact_checker"</span>, create_fact_checker, <span class="code-string">"Cross-checks claims"</span>)
+register_agent_if_absent(<span class="code-string">"synthesizer"</span>, create_synthesizer, <span class="code-string">"Creates reports"</span>)
+
+<span class="code-comment"># ===========================================</span>
+<span class="code-comment"># STEP 2: The skill (guides the agent)</span>
+<span class="code-comment"># ===========================================</span>
+<span class="code-comment"># This tells the agent WHEN and HOW to use workflows</span>
+ORCHESTRATOR_SKILL = {
+    <span class="code-string">"name"</span>: <span class="code-string">"orchestrator"</span>,
+    <span class="code-string">"content"</span>: <span class="code-string">"""
+When asked to research deeply:
+1. Identify 4-6 distinct research angles
+2. Use wf.map_agents() to fan out research in parallel
+3. Use wf.reduce_agent() to synthesize findings
+"""</span>
+}
+
+<span class="code-comment"># ===========================================</span>
+<span class="code-comment"># STEP 3: Create parent agent (hires the team lead)</span>
+<span class="code-comment"># ===========================================</span>
+parent_agent = Agent(
+    llm=LLM(model=<span class="code-string">"gpt-4o-mini"</span>),
+    tools=[Tool(name=WorkflowToolSet.name)],  <span class="code-comment"># ← THE MAGIC</span>
+    agent_context=AgentContext(skills=[ORCHESTRATOR_SKILL])
+)
+
+<span class="code-comment"># ===========================================</span>
+<span class="code-comment"># STEP 4: Send the task (the agent writes the rest)</span>
+<span class="code-comment"># ===========================================</span>
+conversation = Conversation(agent=parent_agent)
+conversation.send_message(<span class="code-string">"What is the AI coding assistant market size in 2024?"</span>)
+<span class="code-function">result</span> = conversation.run()
+        </div>
+        
+        <div class="agent-writes">
+            <span class="icon">🤖</span>
+            <p>The agent receives the task, uses the skill to decide on a workflow, and calls <code>wf.map_agents()</code> and <code>wf.reduce_agent()</code>.</p>
+        </div>
+        
+        <div class="skill-box">
+            <h3>The Skill Pattern</h3>
+            <p>The skill tells the agent <strong>when</strong> to use workflows and <strong>how</strong> to structure them. The agent figures out the specifics based on the question.</p>
+        </div>
+        
+        <p class="section-label">What the Agent Decides</p>
+        
+        <div class="agent-decides">
+            <h4>Based on the question + skill, the agent picks research angles:</h4>
+            <ul>
+                <li><span class="angle-num">1</span> Market overview and major players</li>
+                <li><span class="angle-num">2</span> Technical developments and capabilities</li>
+                <li><span class="angle-num">3</span> Expert opinions and analysis</li>
+                <li><span class="angle-num">4</span> Statistics and market data</li>
+                <li><span class="angle-num">5</span> Concerns and counterarguments</li>
+            </ul>
+        </div>
+        
+        <h2>What the Agent Writes</h2>
+        
+        <div class="code-block">
+<span class="code-comment"># This is what the agent writes (you don't see this, the agent does it)</span>
+
+<span class="code-keyword">async def</span> <span class="code-function">main</span>(wf):
+    <span class="code-comment"># The agent decided these angles based on the question</span>
+    angles = [
+        <span class="code-string">'Market overview and major players'</span>,
+        <span class="code-string">'Technical capabilities'</span>,
+        <span class="code-string">'Expert opinions'</span>,
+        <span class="code-string">'Statistics and data'</span>,
+        <span class="code-string">'Concerns and debates'</span>
+    ]
+    
+    <span class="code-comment"># Fan out to web_searcher agents in parallel</span>
+    market_data = <span class="code-keyword">await</span> wf.<span class="code-function">map_agents</span>(
+        items=angles,
+        subagent_type=<span class="code-string">'web_searcher'</span>
+    )
+    
+    <span class="code-comment"># Cross-check with fact_checker agents</span>
+    verified = <span class="code-keyword">await</span> wf.<span class="code-function">map_agents</span>(
+        items=market_data,
+        subagent_type=<span class="code-string">'fact_checker'</span>
+    )
+    
+    <span class="code-comment"># Synthesize into final report</span>
+    <span class="code-keyword">return await</span> wf.<span class="code-function">reduce_agent</span>(
+        items=verified,
+        subagent_type=<span class="code-string">'synthesizer'</span>
+    )
+        </div>
+        
+        <h2>How It Flows</h2>
+        
+        <div class="flow">
+            <h3>The Mental Model</h3>
+            <div class="flow-steps">
+                <span class="flow-step you">You</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step agent">Parent Agent</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step wf">Writes Workflow</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step sub">map_agents()</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step sub">reduce_agent()</span>
+            </div>
+            <p style="margin-top: 16px; color: #6b7280; font-size: 0.875rem;">The agent is the conductor. You just give it a task and the tools.</p>
+        </div>
+        
+        <div class="comparison-box">
+            <h3>You Write vs Agent Writes</h3>
+            <div class="comparison-row">
+                <span style="flex: 1;">Setup (sub-agents, skill, parent agent)</span>
+                <span class="old">You →</span>
+                <span class="new">✓</span>
+            </div>
+            <div class="comparison-row">
+                <span style="flex: 1;">Research angles (based on question)</span>
+                <span class="old">You →</span>
+                <span class="new">✓</span>
+            </div>
+            <div class="comparison-row">
+                <span style="flex: 1;">Which sub-agents to use when</span>
+                <span class="old">You →</span>
+                <span class="new">✓</span>
+            </div>
+            <div class="comparison-row">
+                <span style="flex: 1;">Parallel vs sequential execution</span>
+                <span class="old">You →</span>
+                <span class="new">✓</span>
+            </div>
+            <div class="comparison-row">
+                <span style="flex: 1;">How to aggregate results</span>
+                <span class="old">You →</span>
+                <span class="new">✓</span>
+            </div>
+        </div>
+        
+        <div class="nav-links">
+            <a href="old-way.html" class="prev">← See the Old Way</a>
+            <a href="comparison.html" class="next">See Side-by-Side →</a>
+        </div>
+    </div>
+</body>
+</html>

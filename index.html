@@ -442,14 +442,24 @@ run()
         <h2>See It In Action</h2>
         
         <div class="demos">
-            <a href="comparison.html" class="demo-card">
-                <h4>Comparison Guide</h4>
-                <p>Side-by-side code comparison</p>
+            <a href="old-way.html" class="demo-card">
+                <h4>The Old Way</h4>
+                <p>Manual orchestration - you write the loop</p>
                 <span class="tag">Start Here</span>
+            </a>
+            <a href="new-way.html" class="demo-card">
+                <h4>The New Way</h4>
+                <p>Agent-written orchestration - you write the setup</p>
+                <span class="tag">New</span>
+            </a>
+            <a href="comparison.html" class="demo-card">
+                <h4>Side-by-Side</h4>
+                <p>Compare both approaches</p>
+                <span class="tag">Compare</span>
             </a>
             <a href="deep_research/comparison.html" class="demo-card">
                 <h4>Deep Research Demo</h4>
-                <p>Manual vs Workflow side-by-side</p>
+                <p>Live demo comparison</p>
                 <span class="tag">Demo</span>
             </a>
         </div>
@@ -457,7 +467,7 @@ run()
         <div class="cta">
             <h2>Run the SDK Demo</h2>
             <p>Requires an API key in .env</p>
-            <code>python deep_research/deep_research.py "your question"</code>
+            <code>python deep_research/deep_research_workflow.py "your question"</code>
             <div class="cta-links">
                 <a href="bitter-lesson.html">The Bitter Lesson</a>
                 <span style="color: #e5e7eb;">&middot;</span>
