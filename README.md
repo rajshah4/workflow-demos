@@ -14,7 +14,7 @@ As models improve, they can now *write the orchestration loop themselves*. This 
 
 Building multi-agent systems today means **manually orchestrating sub-agents**. You write the loops, manage state, and coordinate everything.
 
-[See the Old Way →](old-way.html)
+[See the Old Way →](https://rajshah4.github.io/workflow-demos/old-way.html)
 
 ---
 
@@ -34,7 +34,7 @@ conversation.run()
 # Agent writes: async def main(wf): ... map_agents() ... reduce_agent()
 ```
 
-[See the New Way →](new-way.html) | [Side-by-Side Comparison →](comparison.html)
+[See the New Way →](https://rajshah4.github.io/workflow-demos/new-way.html) | [Side-by-Side Comparison →](https://rajshah4.github.io/workflow-demos/comparison.html)
 
 ---
 
@@ -42,7 +42,7 @@ conversation.run()
 
 Anthropic used deep research as their example. Here's **our version** using OpenHands workflows.
 
-[See the Deep Research Demo →](deep_research/comparison.html)
+[See the Deep Research Demo →](https://rajshah4.github.io/workflow-demos/deep_research/comparison.html)
 
 ### The Key Parts
 
