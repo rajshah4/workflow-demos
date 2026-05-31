@@ -6,6 +6,9 @@
 # Private story/research (for blog/video planning)
 .story.md
 .research.md
+FLOW_EXPLAINED.md
+VIDEO_SCRIPT.md
+DEEP_DIVE.md
 
 # Python
 __pycache__/
@@ -28,5 +31,4 @@ ENV/
 *.log
 
 # OS
-Thumbs.dbVIDEO_SCRIPT.md
-DEEP_DIVE.md
+Thumbs.db
