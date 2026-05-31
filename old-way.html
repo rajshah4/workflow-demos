@@ -62,6 +62,13 @@
             border-top: 1px solid #e5e7eb;
         }
         
+        h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #374151;
+            margin: 24px 0 12px;
+        }
+        
         .lead {
             background: #fef2f2;
             border: 1px solid #fecaca;
@@ -74,16 +81,54 @@
             color: #991b1b;
         }
         
-        .code-block {
+        .code-wrapper {
+            margin: 24px 0;
             background: #1c1917;
-            color: #e5e7eb;
             border-radius: 12px;
-            padding: 24px;
+            overflow: hidden;
+        }
+        
+        .code-header {
+            background: #292524;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #3f3f46;
+        }
+        
+        .code-dots {
+            display: flex;
+            gap: 6px;
+        }
+        
+        .code-dots span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .code-dots span:nth-child(1) { background: #ef4444; }
+        .code-dots span:nth-child(2) { background: #fbbf24; }
+        .code-dots span:nth-child(3) { background: #22c55e; }
+        
+        .code-filename {
+            color: #a1a1aa;
+            font-size: 0.8125rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        pre {
+            padding: 20px 24px;
+            overflow-x: auto;
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.8125rem;
-            line-height: 1.8;
-            overflow-x: auto;
-            margin: 24px 0;
+            line-height: 1.7;
+            color: #e5e7eb;
+        }
+        
+        code {
+            font-family: 'JetBrains Mono', monospace;
         }
         
         .code-comment { color: #9ca3af; }
@@ -92,13 +137,21 @@
         .code-function { color: #fbbf24; }
         .code-variable { color: #34d399; }
         .code-number { color: #fb923c; }
+        .code-operator { color: #e5e7eb; }
         
-        .highlight-line {
-            background: rgba(239, 68, 68, 0.2);
-            display: block;
-            margin: -24px;
-            padding: 24px;
-            border-left: 4px solid #ef4444;
+        .highlight-block {
+            background: rgba(239, 68, 68, 0.15);
+            border-left: 3px solid #ef4444;
+            margin: 8px 0;
+            padding: 4px 0;
+        }
+        
+        .section-comment {
+            color: #6b7280;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin: 32px 0 16px;
         }
         
         .you-write {
@@ -118,7 +171,6 @@
         
         .you-write p {
             color: #991b1b;
-            font-weight: 500;
         }
         
         .stats {
@@ -156,9 +208,7 @@
         }
         
         .flow h3 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 16px;
+            margin-top: 0;
         }
         
         .flow-steps {
@@ -253,6 +303,8 @@
         
         @media (max-width: 640px) {
             .stats { grid-template-columns: repeat(2, 1fr); }
+            .flow-steps { flex-direction: column; align-items: flex-start; }
+            .flow-arrow { transform: rotate(90deg); }
         }
     </style>
 </head>
@@ -287,8 +339,18 @@
         
         <h2>The Code</h2>
         
-        <div class="code-block">
-<span class="code-comment"># deep_research_manual.py - THE OLD WAY</span>
+        <p class="section-comment">File: deep_research_manual.py</p>
+        
+        <div class="code-wrapper">
+            <div class="code-header">
+                <div class="code-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <span class="code-filename">deep_research_manual.py</span>
+            </div>
+            <pre><code><span class="code-comment"># THE OLD WAY - You write the orchestration</span>
 <span class="code-comment"># This is what everyone writes today to build multi-agent systems</span>
 
 <span class="code-comment"># YOU define research angles</span>
@@ -303,9 +365,7 @@ RESEARCH_ANGLES = [
 <span class="code-comment"># YOU create the results list</span>
 research_results = []
 
-<span class="code-comment"># ===========================================</span>
-<span class="code-comment"># YOU write the loop - Phase 1: Research</span>
-<span class="code-comment"># ===========================================</span>
+<span class="section-comment"># YOU write the loop - Phase 1: Research</span>
 <span class="code-keyword">for</span> i, angle <span class="code-keyword">in</span> enumerate(RESEARCH_ANGLES):
     <span class="code-comment"># YOU create the conversation</span>
     research_agent = create_research_agent(llm)
@@ -324,9 +384,7 @@ research_results = []
     <span class="code-comment"># YOU close the conversation</span>
     conv.close()
 
-<span class="code-comment"># ===========================================</span>
-<span class="code-comment"># YOU write the loop - Phase 2: Verification</span>
-<span class="code-comment"># ===========================================</span>
+<span class="section-comment"># YOU write the loop - Phase 2: Verification</span>
 <span class="code-keyword">for</span> angle, result <span class="code-keyword">in</span> zip(RESEARCH_ANGLES, research_results):
     <span class="code-comment"># ... another loop YOU write ...</span>
     checker_agent = create_fact_checker(llm)
@@ -336,12 +394,10 @@ research_results = []
     verified_results.append(conv.state.events[-<span class="code-number">1</span>].content)
     conv.close()
 
-<span class="code-comment"># ===========================================</span>
-<span class="code-comment"># YOU aggregate manually - Phase 3: Synthesis</span>
-<span class="code-comment"># ===========================================</span>
+<span class="section-comment"># YOU aggregate manually - Phase 3: Synthesis</span>
 synth_conv = Conversation(synthesizer)
 synth_conv.send_message(<span class="code-string">f"Combine: {verified_results}"</span>)
-final_report = synth_conv.run()
+final_report = synth_conv.run()</code></pre>
         </div>
         
         <div class="you-write">

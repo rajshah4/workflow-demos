@@ -62,6 +62,13 @@
             border-top: 1px solid #e5e7eb;
         }
         
+        h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #374151;
+            margin: 24px 0 12px;
+        }
+        
         .lead {
             background: #ecfdf5;
             border: 1px solid #bbf7d0;
@@ -74,16 +81,54 @@
             color: #166534;
         }
         
-        .code-block {
+        .code-wrapper {
+            margin: 24px 0;
             background: #1c1917;
-            color: #e5e7eb;
             border-radius: 12px;
-            padding: 24px;
+            overflow: hidden;
+        }
+        
+        .code-header {
+            background: #292524;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #3f3f46;
+        }
+        
+        .code-dots {
+            display: flex;
+            gap: 6px;
+        }
+        
+        .code-dots span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .code-dots span:nth-child(1) { background: #ef4444; }
+        .code-dots span:nth-child(2) { background: #fbbf24; }
+        .code-dots span:nth-child(3) { background: #22c55e; }
+        
+        .code-filename {
+            color: #a1a1aa;
+            font-size: 0.8125rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        pre {
+            padding: 20px 24px;
+            overflow-x: auto;
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.8125rem;
-            line-height: 1.8;
-            overflow-x: auto;
-            margin: 24px 0;
+            line-height: 1.7;
+            color: #e5e7eb;
+        }
+        
+        code {
+            font-family: 'JetBrains Mono', monospace;
         }
         
         .code-comment { color: #9ca3af; }
@@ -92,13 +137,21 @@
         .code-function { color: #fbbf24; }
         .code-variable { color: #34d399; }
         .code-number { color: #fb923c; }
+        .code-operator { color: #e5e7eb; }
         
-        .highlight-line {
-            background: rgba(34, 197, 94, 0.2);
-            display: block;
-            margin: -24px;
-            padding: 24px;
-            border-left: 4px solid #22c55e;
+        .highlight-block {
+            background: rgba(34, 197, 94, 0.15);
+            border-left: 3px solid #22c55e;
+            margin: 8px 0;
+            padding: 4px 0;
+        }
+        
+        .section-comment {
+            color: #6b7280;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin: 32px 0 16px;
         }
         
         .agent-writes {
@@ -118,7 +171,6 @@
         
         .agent-writes p {
             color: #166534;
-            font-weight: 500;
         }
         
         .stats {
@@ -156,9 +208,7 @@
         }
         
         .flow h3 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 16px;
+            margin-top: 0;
         }
         
         .flow-steps {
@@ -207,15 +257,6 @@
             padding: 2px 6px;
             border-radius: 4px;
             font-size: 0.8125rem;
-        }
-        
-        .section-label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #6b7280;
-            margin: 32px 0 12px;
         }
         
         .agent-decides {
@@ -337,6 +378,8 @@
         
         @media (max-width: 640px) {
             .stats { grid-template-columns: repeat(2, 1fr); }
+            .flow-steps { flex-direction: column; align-items: flex-start; }
+            .flow-arrow { transform: rotate(90deg); }
         }
     </style>
 </head>
@@ -371,47 +414,45 @@
         
         <h2>The Code You Write</h2>
         
-        <div class="code-block">
-<span class="code-comment"># deep_research_workflow.py - THE NEW WAY</span>
-<span class="code-comment"># ⚠️ This is the OpenHands SDK implementation, not Anthropic's</span>
+        <p class="section-comment">File: deep_research_workflow.py</p>
+        
+        <div class="code-wrapper">
+            <div class="code-header">
+                <div class="code-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <span class="code-filename">deep_research_workflow.py</span>
+            </div>
+            <pre><code><span class="code-comment"># THE NEW WAY - You write the setup</span>
+<span class="code-comment"># ⚠️ OpenHands SDK implementation, inspired by Anthropic</span>
 
-<span class="code-comment"># ===========================================</span>
-<span class="code-comment"># STEP 1: Register sub-agents (build the team)</span>
-<span class="code-comment"># ===========================================</span>
-<span class="code-comment"># Define what each role can do - done once</span>
+<span class="section-comment"># STEP 1: Register sub-agents (build the team)</span>
 register_agent_if_absent(<span class="code-string">"web_searcher"</span>, create_web_searcher, <span class="code-string">"Searches the web"</span>)
 register_agent_if_absent(<span class="code-string">"fact_checker"</span>, create_fact_checker, <span class="code-string">"Cross-checks claims"</span>)
 register_agent_if_absent(<span class="code-string">"synthesizer"</span>, create_synthesizer, <span class="code-string">"Creates reports"</span>)
 
-<span class="code-comment"># ===========================================</span>
-<span class="code-comment"># STEP 2: The skill (guides the agent)</span>
-<span class="code-comment"># ===========================================</span>
-<span class="code-comment"># This tells the agent WHEN and HOW to use workflows</span>
+<span class="section-comment"># STEP 2: The skill (guides the agent)</span>
 ORCHESTRATOR_SKILL = {
     <span class="code-string">"name"</span>: <span class="code-string">"orchestrator"</span>,
-    <span class="code-string">"content"</span>: <span class="code-string">"""
-When asked to research deeply:
+    <span class="code-string">"content"</span>: <span class="code-string">"""When asked to research deeply:
 1. Identify 4-6 distinct research angles
 2. Use wf.map_agents() to fan out research in parallel
-3. Use wf.reduce_agent() to synthesize findings
-"""</span>
+3. Use wf.reduce_agent() to synthesize findings"""</span>
 }
 
-<span class="code-comment"># ===========================================</span>
-<span class="code-comment"># STEP 3: Create parent agent (hires the team lead)</span>
-<span class="code-comment"># ===========================================</span>
+<span class="section-comment"># STEP 3: Create parent agent (hires the team lead)</span>
 parent_agent = Agent(
     llm=LLM(model=<span class="code-string">"gpt-4o-mini"</span>),
-    tools=[Tool(name=WorkflowToolSet.name)],  <span class="code-comment"># ← THE MAGIC</span>
+    tools=[Tool(name=WorkflowToolSet.name)],
     agent_context=AgentContext(skills=[ORCHESTRATOR_SKILL])
 )
 
-<span class="code-comment"># ===========================================</span>
-<span class="code-comment"># STEP 4: Send the task (the agent writes the rest)</span>
-<span class="code-comment"># ===========================================</span>
+<span class="section-comment"># STEP 4: Send the task (agent writes the rest)</span>
 conversation = Conversation(agent=parent_agent)
-conversation.send_message(<span class="code-string">"What is the AI coding assistant market size in 2024?"</span>)
-<span class="code-function">result</span> = conversation.run()
+conversation.send_message(<span class="code-string">"What is the AI coding assistant market size?"</span>)
+result = conversation.run()</code></pre>
         </div>
         
         <div class="agent-writes">
@@ -439,11 +480,19 @@ conversation.send_message(<span class="code-string">"What is the AI coding assis
         
         <h2>What the Agent Writes</h2>
         
-        <div class="code-block">
-<span class="code-comment"># This is what the agent writes (you don't see this, the agent does it)</span>
-
-<span class="code-keyword">async def</span> <span class="code-function">main</span>(wf):
-    <span class="code-comment"># The agent decided these angles based on the question</span>
+        <p class="section-comment">This is what the agent generates at runtime</p>
+        
+        <div class="code-wrapper">
+            <div class="code-header">
+                <div class="code-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <span class="code-filename">agent_generated_workflow.py</span>
+            </div>
+            <pre><code><span class="code-keyword">async def</span> <span class="code-function">main</span>(wf):
+    <span class="code-comment"># Agent decided these angles based on the question</span>
     angles = [
         <span class="code-string">'Market overview and major players'</span>,
         <span class="code-string">'Technical capabilities'</span>,
@@ -468,7 +517,7 @@ conversation.send_message(<span class="code-string">"What is the AI coding assis
     <span class="code-keyword">return await</span> wf.<span class="code-function">reduce_agent</span>(
         items=verified,
         subagent_type=<span class="code-string">'synthesizer'</span>
-    )
+    )</code></pre>
         </div>
         
         <h2>How It Flows</h2>
