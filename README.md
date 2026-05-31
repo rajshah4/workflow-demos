@@ -6,8 +6,7 @@ As models improve, they can now *write the orchestration loop themselves*. This 
 
 > **About this implementation:** This is the OpenHands SDK's implementation of dynamic workflows,
 > inspired by [Claude Code's Dynamic Workflows](https://claude.com/blog/introducing-dynamic-workflows-in-claude-code).
-> We don't know exactly how Anthropic implements it — this is our interpretation using open source tools.
-> See the [original PR](https://github.com/OpenHands/software-agent-sdk/pull/3426).
+> We don't know exactly how Anthropic implements it — this is our interpretation using open source tools. See the [original PR](https://github.com/OpenHands/software-agent-sdk/pull/3426).
 
 ---
 
@@ -69,14 +68,31 @@ register_agent_if_absent("fact_checker", create_fact_checker, "Cross-checks clai
 register_agent_if_absent("synthesizer", create_synthesizer, "Creates reports")
 ```
 
-**3. The Model Decides** — Based on the skill + question, the model picks angles and calls sub-agents.
+**3. You Write the Setup** — Create the parent agent with skills and sub-agents.
 
 ```python
-# This is what the model writes (you don't write this)
+parent_agent = Agent(
+    llm=LLM(model="gpt-4o-mini"),
+    tools=[Tool(name=WorkflowToolSet.name)],
+    agent_context=AgentContext(skills=[ORCHESTRATOR_SKILL])
+)
+```
+
+**4. The Model Writes the Orchestration** — Behind the scenes, the model generates and runs this:
+
+```python
+# This is what the model writes (you never see this)
 async def main(wf):
+    # Model decides: which angles to research
     angles = ['Market overview', 'Technical capabilities', 'Expert opinions', ...]
+    
+    # Model calls: fan out to web_searcher agents in parallel
     market_data = await wf.map_agents(angles, 'web_searcher')
+    
+    # Model calls: cross-check with fact_checker
     verified = await wf.map_agents(market_data, 'fact_checker')
+    
+    # Model calls: synthesize into final report
     return await wf.reduce_agent(verified, 'synthesizer')
 ```
 
@@ -85,6 +101,27 @@ async def main(wf):
 ---
 
 ## Quick Start
+
+### 1. Install the SDK (with workflow support)
+
+The workflow tool is in [PR #3426](https://github.com/OpenHands/software-agent-sdk/pull/3426). If it hasn't been merged yet:
+
+```bash
+# Clone the SDK
+git clone https://github.com/OpenHands/software-agent-sdk.git
+cd software-agent-sdk
+
+# Checkout the PR branch
+git fetch origin pull/3426/head:workflow-pr
+git checkout workflow-pr
+
+# Install
+pip install -e .
+```
+
+Or just `pip install openhands` if the PR is merged.
+
+### 2. Run the demos
 
 ```bash
 # Add your API key
