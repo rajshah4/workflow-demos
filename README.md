@@ -90,3 +90,28 @@ Dynamic workflows solve both: up to 16 concurrent agents, 1,000 total per workfl
 - [PR #3426: Dynamic Workflow Tool](https://github.com/OpenHands/software-agent-sdk/pull/3426)
 - [Claude Code: Dynamic Workflows](https://claude.com/blog/introducing-dynamic-workflows-in-claude-code)
 - [LangChain: Deep Research (manual pattern)](https://docs.langchain.com/oss/python/deepagents/deep-research)
+
+---
+
+## For Content Creators
+
+### [Video Script](VIDEO_SCRIPT.md)
+Complete script with speaker notes for an 18-20 minute YouTube video covering:
+- The Old Way: Manual orchestration (40 lines)
+- The New Way: Agent-written orchestration (12 lines)
+- Live demo with real trace
+- Deep dive into sub-agents and Laminar
+
+### [Deep Dive Document](DEEP_DIVE.md)
+Technical reference covering:
+- Architecture deep dive
+- WorkflowToolSet API
+- Live trace analysis
+- Sub-agent lifecycle
+- Laminar observability
+
+### [Live Trace (from real run)](https://rajshah4.github.io/workflow-demos/index.html#live-trace)
+The actual trace from running the deep research workflow:
+- 81.24s total time
+- 180K tokens ($0.0186)
+- 11 sub-agents in parallel
