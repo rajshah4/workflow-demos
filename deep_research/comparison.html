@@ -123,6 +123,7 @@
             font-size: 0.8125rem;
             line-height: 1.8;
             overflow-x: auto;
+            margin: 24px 0;
         }
         
         .code-comment { color: #9ca3af; }
@@ -130,6 +131,17 @@
         .code-string { color: #a5d6ff; }
         .code-function { color: #fbbf24; }
         .code-variable { color: #34d399; }
+        
+        .code-section {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed rgba(255,255,255,0.15);
+        }
+        .code-section:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
         
         .highlight-line {
             background: rgba(255, 255, 255, 0.1);
@@ -374,7 +386,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="code-block">
-<span class="code-comment"># YOU define research angles</span>
+<div class="code-section"><span class="code-comment"># YOU define research angles</span>
 RESEARCH_ANGLES = [
     <span class="code-string">"Market overview"</span>,
     <span class="code-string">"Technical developments"</span>,
@@ -382,8 +394,9 @@ RESEARCH_ANGLES = [
     <span class="code-string">"Statistics"</span>,
     <span class="code-string">"Concerns"</span>
 ]
+</div>
 
-<span class="code-comment"># YOU create the results list</span>
+<div class="code-section"><span class="code-comment"># YOU create the results list</span>
 research_results = []
 
 <span class="code-keyword">for</span> i, angle <span class="code-keyword">in</span> enumerate(RESEARCH_ANGLES):
@@ -403,15 +416,18 @@ research_results = []
     
     <span class="code-comment"># YOU close the conversation</span>
     conv.close()
+</div>
 
-<span class="code-comment"># YOU repeat for verification</span>
+<div class="code-section"><span class="code-comment"># YOU repeat for verification</span>
 <span class="code-keyword">for</span> angle, result <span class="code-keyword">in</span> zip(...):
     <span class="code-comment"># ... another loop YOU write ...</span>
+</div>
 
-<span class="code-comment"># YOU aggregate manually</span>
+<div class="code-section"><span class="code-comment"># YOU aggregate manually</span>
 synth_conv = Conversation(synthesizer)
 synth_conv.send_message(<span class="code-string">f"Combine: {results}"</span>)
 final_report = synth_conv.run()
+</div>
                     </div>
                     
                     <div class="key-diff">
