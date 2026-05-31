@@ -54,14 +54,8 @@ Agent-written orchestration — you write the setup, the agent writes the loop.
 ### [Side-by-Side Comparison](comparison.html)
 See both approaches with code examples side by side.
 
-### [The Bitter Lesson](bitter-lesson.html)
-The progression: Year 1 (you write the loop) → Year N (model writes everything).
-
-### [The Org Chart](org-chart.html)
-"Subagents are workers. Workflows are the management system."
-
-### [Stack Overview](index.html)
-The L1-L4 stack model for agent orchestration.
+### [Deep Research Demo](deep_research/comparison.html)
+Live demo comparing both approaches.
 
 ---
 
