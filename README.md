@@ -14,11 +14,15 @@ As models improve, they can now *write the orchestration loop themselves*. This 
 
 Building multi-agent systems today means **manually orchestrating sub-agents**. You write the loops, manage state, and coordinate everything.
 
+[See the Old Way →](https://rajshah4.github.io/workflow-demos/old-way.html)
+
 ---
 
 ## The Solution
 
 What if the model wrote its own orchestration? With workflows, you **give the model a task and the tools**. The model decides how to structure the workflow.
+
+[See the New Way →](https://rajshah4.github.io/workflow-demos/new-way.html)
 
 ```python
 # Without Workflows: 25+ lines

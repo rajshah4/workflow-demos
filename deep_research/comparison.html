@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Research: Old Way vs New Way</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #fefcf8;
+            color: #374151;
+            line-height: 1.7;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 12px;
+        }
+        
+        .subtitle {
+            font-size: 1.125rem;
+            color: #6b7280;
+        }
+        
+        .comparison-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin-bottom: 24px;
+        }
+        
+        .header-card {
+            padding: 24px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .header-card.old {
+            background: #fef2f2;
+            border: 2px solid #ef4444;
+        }
+        
+        .header-card.new {
+            background: #ecfdf5;
+            border: 2px solid #22c55e;
+        }
+        
+        .header-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            border: none;
+            padding: 0;
+        }
+        
+        .header-card.old h2 { color: #ef4444; }
+        .header-card.new h2 { color: #22c55e; }
+        
+        .header-card p {
+            color: #6b7280;
+        }
+        
+        .comparison-main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+        
+        .panel {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+        }
+        
+        .panel-header {
+            padding: 20px 24px;
+            font-weight: 600;
+            font-size: 1.125rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .panel.old .panel-header {
+            background: #fef2f2;
+            color: #ef4444;
+            border-bottom: 2px solid #ef4444;
+        }
+        
+        .panel.new .panel-header {
+            background: #ecfdf5;
+            color: #22c55e;
+            border-bottom: 2px solid #22c55e;
+        }
+        
+        .panel-body {
+            padding: 24px;
+        }
+        
+        .code-block {
+            background: #1c1917;
+            color: #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8125rem;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+        
+        .code-comment { color: #9ca3af; }
+        .code-keyword { color: #f472b6; }
+        .code-string { color: #a5d6ff; }
+        .code-function { color: #fbbf24; }
+        .code-variable { color: #34d399; }
+        
+        .highlight-line {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 8px;
+            margin: -4px -8px;
+            border-radius: 4px;
+            border-left: 3px solid #6366f1;
+            padding-left: 12px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 24px;
+        }
+        
+        .stat {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #111827;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            text-transform: uppercase;
+        }
+        
+        .key-diff {
+            margin-top: 24px;
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 0.9375rem;
+        }
+        
+        .panel.old .key-diff {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+        }
+        
+        .panel.new .key-diff {
+            background: #ecfdf5;
+            border: 1px solid #bbf7d0;
+        }
+        
+        .key-diff strong {
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .panel.old .key-diff strong { color: #ef4444; }
+        .panel.new .key-diff strong { color: #22c55e; }
+        
+        .flow-diagram {
+            margin-top: 32px;
+            padding: 24px;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+        
+        .flow-diagram h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #111827;
+        }
+        
+        .flow-steps {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .flow-step {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .flow-step.you {
+            background: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+        
+        .flow-step.loop {
+            background: #e0e7ff;
+            color: #4f46e5;
+            border: 1px solid #c7d2fe;
+        }
+        
+        .flow-step.agent {
+            background: #dbeafe;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+        
+        .flow-step.wf {
+            background: #fef3c7;
+            color: #d97706;
+            border: 1px solid #fde68a;
+        }
+        
+        .flow-step.subagent {
+            background: #dcfce7;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+        
+        .flow-arrow {
+            color: #9ca3af;
+            font-size: 1.25rem;
+        }
+        
+        .demo-section {
+            margin-top: 48px;
+            padding: 32px;
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .demo-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+            color: #111827;
+        }
+        
+        .demo-commands {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        
+        .demo-command {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .demo-command h4 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #6b7280;
+        }
+        
+        .demo-command code {
+            display: block;
+            background: #1c1917;
+            color: #e5e7eb;
+            padding: 16px;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8125rem;
+            word-break: break-all;
+        }
+        
+        .vs-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background: #6366f1;
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 0.875rem;
+            margin: 24px auto;
+        }
+        
+        @media (max-width: 900px) {
+            .comparison-header, .comparison-main, .demo-commands {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Deep Research: Old Way vs New Way</h1>
+            <p class="subtitle">See the difference between manual orchestration and agent-written workflows</p>
+        </header>
+        
+        <div class="comparison-header">
+            <div class="header-card old">
+                <h2>Manual Orchestration</h2>
+                <p>You write the loop. You control everything.</p>
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-value">~120</div>
+                        <div class="stat-label">Lines of code</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">Sequential</div>
+                        <div class="stat-label">Execution</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">You</div>
+                        <div class="stat-label">Control</div>
+                    </div>
+                </div>
+            </div>
+            <div class="header-card new">
+                <h2>Agent-Written Workflow</h2>
+                <p>Agent writes the loop. You just give the objective.</p>
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-value">~15</div>
+                        <div class="stat-label">Lines of code</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">Parallel</div>
+                        <div class="stat-label">Execution</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">Agent</div>
+                        <div class="stat-label">Control</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="vs-badge">VS</div>
+        
+        <div class="comparison-main">
+            <div class="panel old">
+                <div class="panel-header">
+                    <span>👤</span> deep_research_manual.py
+                </div>
+                <div class="panel-body">
+                    <div class="code-block">
+<span class="code-comment"># YOU define research angles</span>
+RESEARCH_ANGLES = [
+    <span class="code-string">"Market overview"</span>,
+    <span class="code-string">"Technical developments"</span>,
+    <span class="code-string">"Expert opinions"</span>,
+    <span class="code-string">"Statistics"</span>,
+    <span class="code-string">"Concerns"</span>
+]
+
+<span class="code-comment"># YOU create the results list</span>
+research_results = []
+
+<span class="code-keyword">for</span> i, angle <span class="code-keyword">in</span> enumerate(RESEARCH_ANGLES):
+    <span class="code-comment"># YOU create the conversation</span>
+    research_agent = create_research_agent(llm)
+    conv = LocalConversation(agent=research_agent)
+    
+    <span class="code-comment"># YOU send the message</span>
+    conv.send_message(<span class="code-string">f"Research: {angle}"</span>)
+    
+    <span class="code-comment"># YOU run it</span>
+    conv.run()
+    
+    <span class="code-comment"># YOU extract the result</span>
+    result = conv.state.events[-1].content
+    research_results.append(result)
+    
+    <span class="code-comment"># YOU close the conversation</span>
+    conv.close()
+
+<span class="code-comment"># YOU repeat for verification</span>
+<span class="code-keyword">for</span> angle, result <span class="code-keyword">in</span> zip(...):
+    <span class="code-comment"># ... another loop YOU write ...</span>
+
+<span class="code-comment"># YOU aggregate manually</span>
+synth_conv = Conversation(synthesizer)
+synth_conv.send_message(<span class="code-string">f"Combine: {results}"</span>)
+final_report = synth_conv.run()
+                    </div>
+                    
+                    <div class="key-diff">
+                        <strong>You wrote this code</strong>
+                        Every loop, every conversation, every result extraction — written by you.
+                    </div>
+                    
+                    <div class="flow-diagram">
+                        <h3>How it flows:</h3>
+                        <div class="flow-steps">
+                            <span class="flow-step you">You</span>
+                            <span class="flow-arrow">→</span>
+                            <span class="flow-step loop">for loop</span>
+                            <span class="flow-arrow">→</span>
+                            <span class="flow-step agent">Agent</span>
+                            <span class="flow-arrow">→</span>
+                            <span class="flow-step agent">Agent</span>
+                            <span class="flow-arrow">→</span>
+                            <span class="flow-step agent">Agent</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel new">
+                <div class="panel-header">
+                    <span>🤖</span> deep_research_workflow.py
+                </div>
+                <div class="panel-body">
+                    <div class="code-block">
+<span class="code-comment"># Register sub-agent types (once)</span>
+register_agent_if_absent(<span class="code-string">"web_searcher"</span>, ...)
+register_agent_if_absent(<span class="code-string">"fact_checker"</span>, ...)
+register_agent_if_absent(<span class="code-string">"synthesizer"</span>, ...)
+
+<span class="code-comment"># Create parent agent with workflow tool</span>
+parent_agent = Agent(
+    llm=LLM(model=<span class="code-string">"gpt-4o-mini"</span>),
+    tools=[Tool(name=WorkflowToolSet.name)]
+)
+
+<span class="code-comment"># Send the task</span>
+conversation = Conversation(agent=parent_agent)
+conversation.send_message(
+    <span class="code-string">"Research deeply from multiple angles"</span>
+)
+
+<span class="highlight-line"><span class="code-comment"># THE AGENT WRITES THE ORCHESTRATION</span></span>
+result = conversation.run()
+                    </div>
+                    
+                    <div class="key-diff">
+                        <strong>Agent wrote this code</strong>
+                        The skill guided the agent on HOW to structure the workflow.
+                        The agent decided which angles to research and which sub-agents to use.
+                    </div>
+                    
+                    <div class="key-diff" style="margin-top: 12px;">
+                        <strong style="color: #6366f1;">The Skill Pattern</strong>
+                        The skill tells the agent: "Identify 4-6 research angles, use map_agents, use reduce_agent"
+                        The agent figures out: "For market size, I need: overview, tech, experts, stats, concerns"
+                    </div>
+                    
+                    <div class="flow-diagram">
+                        <h3>What the agent wrote:</h3>
+                        <div class="code-block" style="font-size: 0.75rem; margin-top: 12px;">
+<span class="code-keyword">async def</span> <span class="code-function">main</span>(wf):
+    angles = [<span class="code-string">"Market..."</span>, <span class="code-string">"Tech..."</span>, ...]
+    
+    market_data = <span class="code-keyword">await</span> wf.<span class="code-function">map_agents</span>(
+        items=angles,
+        subagent_type=<span class="code-string">'web_searcher'</span>
+    )
+    
+    verified = <span class="code-keyword">await</span> wf.<span class="code-function">map_agents</span>(
+        items=market_data,
+        subagent_type=<span class="code-string">'fact_checker'</span>
+    )
+    
+    <span class="code-keyword">return await</span> wf.<span class="code-function">reduce_agent</span>(
+        items=verified,
+        subagent_type=<span class="code-string">'synthesizer'</span>
+    )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>Run the Demos</h2>
+            <p style="margin-bottom: 24px; color: #6b7280;">Both demos research: "What is the AI coding assistant market size in 2024?"</p>
+            
+            <div class="demo-commands">
+                <div class="demo-command">
+                    <h4>OLD WAY: Manual Orchestration</h4>
+                    <code>docker run --rm workflow-demo \
+    python3 deep_research/deep_research_manual.py \
+    "What is the AI coding assistant market size in 2024?"</code>
+                </div>
+                <div class="demo-command">
+                    <h4>NEW WAY: Agent-Written Workflow</h4>
+                    <code>docker run --rm workflow-demo \
+    python3 deep_research/deep_research_workflow.py \
+    "What is the AI coding assistant market size in 2024?"</code>
+                </div>
+            </div>
+            
+            <div style="margin-top: 24px; padding: 20px; background: #ecfdf5; border-radius: 8px;">
+                <h4 style="margin-bottom: 12px; color: #16a34a;">Live Trace Results (Workflow Version)</h4>
+                <div class="stats" style="margin-top: 0;">
+                    <div class="stat">
+                        <div class="stat-value">81.24s</div>
+                        <div class="stat-label">Total Time</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">180K</div>
+                        <div class="stat-label">Tokens</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">$0.0186</div>
+                        <div class="stat-label">Cost</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">11</div>
+                        <div class="stat-label">Sub-agents</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">15</div>
+                        <div class="stat-label">Lines (you wrote)</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">25+</div>
+                        <div class="stat-label">Lines (agent wrote)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
