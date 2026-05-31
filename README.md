@@ -4,7 +4,9 @@
 
 The breakthrough isn't that agents can use other agents. It's that agents can now *write the orchestration loop themselves*.
 
-> Inspired by Claude Code's Dynamic Workflows — built with the [OpenHands SDK](https://github.com/OpenHands/software-agent-sdk) (open source).
+> **About this implementation:** This is the OpenHands SDK's implementation of dynamic workflows,
+> inspired by [Claude Code's Dynamic Workflows](https://claude.com/blog/introducing-dynamic-workflows-in-claude-code).
+> We don't know exactly how Anthropic implements it — this is our interpretation using open source tools.
 
 ---
 
@@ -86,10 +88,24 @@ Dynamic workflows solve both: up to 16 concurrent agents, 1,000 total per workfl
 
 ## Resources
 
-- [OpenHands SDK](https://github.com/OpenHands/software-agent-sdk)
-- [PR #3426: Dynamic Workflow Tool](https://github.com/OpenHands/software-agent-sdk/pull/3426)
-- [Claude Code: Dynamic Workflows](https://claude.com/blog/introducing-dynamic-workflows-in-claude-code)
-- [LangChain: Deep Research (manual pattern)](https://docs.langchain.com/oss/python/deepagents/deep-research)
+- [OpenHands SDK](https://github.com/OpenHands/software-agent-sdk) — Our implementation
+- [PR #3426: Dynamic Workflow Tool](https://github.com/OpenHands/software-agent-sdk/pull/3426) — The code
+- [Claude Code: Dynamic Workflows](https://claude.com/blog/introducing-dynamic-workflows-in-claude-code) — Their blog post (we don't have source code)
+- [LangChain: Deep Research](https://docs.langchain.com/oss/python/deepagents/deep-research) — Example of manual orchestration
+
+---
+
+## What We Know vs Don't Know
+
+| What | Status |
+|------|--------|
+| **Pattern**: Agent writing orchestration | Known (from blog post) |
+| **Skill pattern**: Guidance for agent | Known (inferred from blog) |
+| **Sub-agents**: Pre-defined roles | Known (inferred from blog) |
+| **OpenHands implementation** | Known (our code) |
+| **Anthropic's actual implementation** | Unknown (proprietary) |
+
+This repo shows the OpenHands implementation of the pattern described in Anthropic's blog.
 
 ---
 

@@ -2,10 +2,13 @@
 Deep Research: Manual Orchestration (THE OLD WAY)
 =================================================
 
-This is what building multi-agent systems looks like TODAY.
+This is what building multi-agent systems looks like TODAY - the traditional way.
 You write the loop. You control the orchestration.
 
-Notice how much code YOU have to write just to coordinate agents.
+This represents the "before" state - not Anthropic's implementation.
+OpenHands SDK's approach to showing what manual orchestration looks like.
+
+Reference: This is inspired by patterns like LangChain, not Anthropic's implementation.
 """
 
 import os

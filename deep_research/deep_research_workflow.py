@@ -2,10 +2,13 @@
 Deep Research: Agent-Written Orchestration (THE NEW WAY)
 =======================================================
 
-This is what building multi-agent systems looks like WITH workflows.
-The AGENT writes the orchestration loop. You just give it the objective.
+⚠️ This is the OpenHands SDK implementation, not Anthropic's.
+We don't know exactly how Claude Code does it - this is inspired by their blog.
 
-Notice: YOU only write the setup. The agent writes the orchestration.
+The pattern (agent writing orchestration) is similar to what Anthropic described.
+The implementation (skills, sub-agents, WorkflowToolSet) is OpenHands'.
+
+Reference: https://claude.com/blog/introducing-dynamic-workflows-in-claude-code
 """
 
 import os
