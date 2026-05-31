@@ -1,33 +1,26 @@
-# Dynamic Workflows Demo
+# Dynamic Workflows Walkthrough
 
-**When agents write their own orchestration code.**
+**Dive into agents that write their own orchestration code.**
 
-The breakthrough isn't that agents can use other agents. It's that agents can now *write the orchestration loop themselves*.
+As models improve, we are now seeing agents can now *write the orchestration loop themselves*. This repo walks through an example using the [OpenHands SDK](https://docs.openhands.dev/sdk)
 
 > **About this implementation:** This is the OpenHands SDK's implementation of dynamic workflows,
 > inspired by [Claude Code's Dynamic Workflows](https://claude.com/blog/introducing-dynamic-workflows-in-claude-code).
-> We don't know exactly how Anthropic implements it — this is our interpretation using open source tools.
+> We don't know exactly how Anthropic implements it — this is our interpretation using open source tools. You can peek at the [original PR](https://github.com/OpenHands/software-agent-sdk/pull/3426) adding workflows.
 
 ---
 
-## The Question
+## The Problem
 
-Everyone's building multi-agent systems. Most of them are secretly a mess:
+Everyone's building multi-agent systems. You end up having to manually orchestrate sub-agents. People often use frameworks like [LangChain](https://docs.langchain.com/oss/python/deepagents/deep-research) to orchestrate agents. 
 
-- Sub-agents pollute the main context
-- Parallelism requires manual orchestration
-- You end up writing more framework than code
-
-**The interesting question isn't "can agents use other agents?" It's *where the orchestration logic lives*.**
+Here is a visualization of [The Old Way](old-way.html)
 
 ---
 
-## The Pattern
+## The Solution
 
-| Approach | You Write | Agent Writes |
-|----------|-----------|--------------|
-| **Manual** (LangChain style) | The loop, the agents, the aggregation | Nothing |
-| **Dynamic** (Workflows) | Just the objective | The entire orchestration |
+What if the model wrote it's own orchestration?  With workflows, you tell the model to go solve the problem using workflows and subagents. The model is then reponsisble for handling all the orchestration code. So intead of 25+ lines of orchestration code, you move to 2 lines handing that task over to the model.
 
 ```python
 # Without Workflows: 25+ lines
@@ -41,21 +34,13 @@ conversation.run()
 # Agent writes: async def main(wf): ... map_agents() ... reduce_agent()
 ```
 
+Here are some visualziations doing a [Side-by-Side Comparison](comparison.html) for th's new [workflows](new-way.html) approach. 
+
 ---
 
-## Explore the Story
+## Deep Research Example
 
-### [The Old Way](old-way.html)
-Manual orchestration — you write the loop, manage state, coordinate everything.
-
-### [The New Way](new-way.html)
-Agent-written orchestration — you write the setup, the agent writes the loop.
-
-### [Side-by-Side Comparison](comparison.html)
-See both approaches with code examples side by side.
-
-### [Deep Research Demo](deep_research/comparison.html)
-Live demo comparing both approaches.
+The Anthropic example used deep research as an example use case. So let's walkthrough a [Deep Research Demo](deep_research/comparison.html) to illustrate this. 
 
 ---
 
@@ -107,27 +92,3 @@ Dynamic workflows solve both: up to 16 concurrent agents, 1,000 total per workfl
 
 This repo shows the OpenHands implementation of the pattern described in Anthropic's blog.
 
----
-
-## For Content Creators
-
-### [Video Script](VIDEO_SCRIPT.md)
-Complete script with speaker notes for an 18-20 minute YouTube video covering:
-- The Old Way: Manual orchestration (40 lines)
-- The New Way: Agent-written orchestration (12 lines)
-- Live demo with real trace
-- Deep dive into sub-agents and Laminar
-
-### [Deep Dive Document](DEEP_DIVE.md)
-Technical reference covering:
-- Architecture deep dive
-- WorkflowToolSet API
-- Live trace analysis
-- Sub-agent lifecycle
-- Laminar observability
-
-### [Live Trace (from real run)](https://rajshah4.github.io/workflow-demos/index.html#live-trace)
-The actual trace from running the deep research workflow:
-- 81.24s total time
-- 180K tokens ($0.0186)
-- 11 sub-agents in parallel

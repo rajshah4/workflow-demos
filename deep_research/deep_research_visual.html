@@ -13,6 +13,7 @@
         h1 { font-size: 2.5em; margin-bottom: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .subtitle { color: #8b949e; font-size: 1.1em; }
         .pattern-badge { display: inline-block; background: rgba(102, 126, 234, 0.2); color: #667eea; padding: 6px 14px; border-radius: 20px; font-size: 0.85em; margin-top: 15px; }
+        .sim-badge { display: inline-block; background: rgba(255, 193, 7, 0.2); color: #ffc107; padding: 6px 14px; border-radius: 20px; font-size: 0.85em; margin-top: 10px; border: 1px solid rgba(255, 193, 7, 0.3); }
         
         .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
         
@@ -92,11 +93,13 @@
             <h1>🔍 Deep Research</h1>
             <p class="subtitle">Inspired by Claude Code's /deep-research workflow</p>
             <span class="pattern-badge">Fan-out → Cross-check → Synthesize</span>
+            <br>
+            <span class="sim-badge">⚠️ Simulated Demo — not an actual run</span>
         </header>
         
         <div class="progress-section">
             <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
-            <p class="progress-label" id="progressLabel">Press ▶ Run to start the research workflow</p>
+            <p class="progress-label" id="progressLabel">Press ▶ Simulate to see how the workflow runs</p>
         </div>
         
         <div class="main-grid">
@@ -196,7 +199,7 @@
         </div>
         
         <div class="controls">
-            <button class="btn btn-primary" id="runBtn" onclick="runWorkflow()">▶ Run Research</button>
+            <button class="btn btn-primary" id="runBtn" onclick="runWorkflow()">▶ Simulate Workflow</button>
             <button class="btn btn-secondary" onclick="stepIt()">⏭ Step</button>
             <button class="btn btn-secondary" onclick="reset()">↺ Reset</button>
         </div>
@@ -255,7 +258,7 @@
         
         function runWorkflow() {
             document.getElementById('runBtn').disabled = true;
-            document.getElementById('runBtn').textContent = '⏳ Running...';
+            document.getElementById('runBtn').textContent = '▶ Simulating...';
             let i = step;
             const iv = setInterval(() => {
                 if (i < steps.length) { exec(steps[i]); i++; }
