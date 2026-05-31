@@ -2,7 +2,7 @@
 
 **Agents that write their own orchestration code.**
 
-As models improve, they can now *write the orchestration loop themselves*. This repo walks through an example using the [OpenHands SDK](https://docs.openhands.dev/sdk).
+As models improve, they can now *write the orchestration loop themselves*. This repo walks through examples using the [OpenHands SDK](https://docs.openhands.dev/sdk).
 
 > **About this implementation:** This is the OpenHands SDK's implementation of dynamic workflows,
 > inspired by [Claude Code's Dynamic Workflows](https://claude.com/blog/introducing-dynamic-workflows-in-claude-code).
@@ -13,8 +13,6 @@ As models improve, they can now *write the orchestration loop themselves*. This 
 ## The Problem
 
 Building multi-agent systems today means **manually orchestrating sub-agents**. You write the loops, manage state, and coordinate everything.
-
-[See the Old Way →](https://rajshah4.github.io/workflow-demos/old-way.html)
 
 ---
 
@@ -34,15 +32,11 @@ conversation.run()
 # Agent writes: async def main(wf): ... map_agents() ... reduce_agent()
 ```
 
-[See the New Way →](https://rajshah4.github.io/workflow-demos/new-way.html) | [Side-by-Side Comparison →](https://rajshah4.github.io/workflow-demos/comparison.html)
-
 ---
 
 ## Deep Research Example
 
 Anthropic used deep research as their example. Here's **our version** using OpenHands workflows.
-
-[See the Deep Research Demo →](https://rajshah4.github.io/workflow-demos/deep_research/comparison.html)
 
 ### The Key Parts
 
@@ -100,6 +94,20 @@ async def main(wf):
 
 ---
 
+## Multi-Expert Code Review Example
+
+Another use case: parallel code review with specialized agents.
+
+```python
+# Run 4 reviewers in parallel (workflow version)
+python multi_expert_review/multi_expert_review.py <file_path>
+
+# Run 4 reviewers sequentially (manual version)
+python multi_expert_review/multi_expert_review_manual.py <file_path>
+```
+
+---
+
 ## Quick Start
 
 ### 1. Install the SDK (with workflow support)
@@ -127,11 +135,13 @@ Or just `pip install openhands` if the PR is merged.
 # Add your API key
 echo "OPENAI_API_KEY=sk-..." > .env
 
-# Run the workflow version (agent writes the orchestration)
+# Deep research demos
 python deep_research/deep_research_workflow.py "What is the AI coding assistant market size?"
-
-# Run the manual version (you write the orchestration)
 python deep_research/deep_research_manual.py "What is the AI coding assistant market size?"
+
+# Multi-expert review demos
+python multi_expert_review/multi_expert_review.py <file_path>
+python multi_expert_review/multi_expert_review_manual.py <file_path>
 ```
 
 ---

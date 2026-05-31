@@ -23,7 +23,8 @@ sys.path.insert(0, str(SDK_PATH / "openhands-tools"))
 from dotenv import load_dotenv
 from openhands.sdk import LLM, Agent, AgentContext, Conversation
 from openhands.sdk.subagent import register_agent_if_absent
-from openhands.tools.workflow import WorkflowToolSet, Tool
+from openhands.tools.workflow import WorkflowToolSet
+from openhands.sdk.tool.spec import Tool
 
 # Load environment
 load_dotenv(Path(__file__).parent.parent / ".env")
@@ -80,6 +81,18 @@ When asked to research deeply from multiple angles:
 2. Use wf.map_agents() to fan out research in parallel across these angles
 3. Use wf.reduce_agent() to synthesize all findings into a final report
 4. Structure the final report with: Executive Summary, Key Findings, Sources, Areas of Uncertainty, Next Steps
+
+CRITICAL RULES:
+- Agent type names use UNDERSCORES: 'web_searcher', 'fact_checker', 'synthesizer'
+  - WRONG: 'web-searcher', 'fact-checker', 'general-purpose'
+  - RIGHT: 'web_searcher', 'fact_checker', 'synthesizer'
+- When writing prompts, use DOUBLE QUOTES to avoid apostrophe issues:
+  - GOOD: prompt="Verify this claim: {item}"
+  - BAD: prompt='Verify this claim: {item}'
+- The map_agents API signature is:
+  await wf.map_agents(items=..., prompt="...", subagent_type="agent_name")
+- The reduce_agent API signature is:
+  await wf.reduce_agent(items=..., prompt="...", subagent_type="agent_name")
 """
 }
 
