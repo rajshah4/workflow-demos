@@ -63,21 +63,35 @@ register_agent_if_absent("synthesizer", create_synthesizer, "Creates reports")
 
 
 # ============================================================
-# STEP 2: Create the parent agent with the workflow tool
+# STEP 2: Create the parent agent with the workflow tool + skill
 # ============================================================
+
+# The SKILL: This guides the agent on HOW to structure workflows
+# Like a prompt template in Claude Code workflows
+ORCHESTRATOR_SKILL = {
+    "name": "orchestrator",
+    "content": """
+When asked to research deeply from multiple angles:
+1. Identify 4-6 distinct research angles that cover different perspectives
+   (e.g., market overview, technical capabilities, expert opinions, statistics, concerns)
+2. Use wf.map_agents() to fan out research in parallel across these angles
+3. Use wf.reduce_agent() to synthesize all findings into a final report
+4. Structure the final report with: Executive Summary, Key Findings, Sources, Areas of Uncertainty, Next Steps
+"""
+}
 
 parent_agent = Agent(
     llm=LLM(model="gpt-4o-mini"),
     tools=[Tool(name=WorkflowToolSet.name)],  # <-- THE MAGIC
     agent_context=AgentContext(
         system_message="You are OpenHands, a helpful AI assistant.",
-        skills=[]  # We let the agent figure out when to use the workflow
+        skills=[ORCHESTRATOR_SKILL]  # <-- Guides HOW to structure the workflow
     )
 )
 
 
 # ============================================================
-# THE CONTRAST
+# THE CONTRAST (continued in script)
 # ============================================================
 """
 Compare this to deep_research_manual.py:
@@ -90,11 +104,17 @@ OLD WAY (manual orchestration):
     - 100+ lines of orchestration code
 
 NEW WAY (agent-written orchestration):
-    - You create the parent agent with the workflow tool
+    - You create the parent agent with the workflow tool + skill
+    - The skill tells the agent HOW to structure the workflow
     - You send the task
     - The agent decides to write a workflow
     - The agent calls wf.map_agents(), wf.reduce_agent()
-    - 12 lines of setup code
+    - 20 lines of setup code (including skill)
+
+THE SKILL + SUB-AGENTS PATTERN:
+    - Skill: Tells the agent WHEN to use workflow and HOW to structure it
+    - Sub-agents: Define the available "roles" the agent can use (web_searcher, fact_checker, synthesizer)
+    - The agent: Decides which angles to research, which sub-agents to use, how to aggregate
 """
 
 def run_with_workflow(question: str):
