@@ -378,6 +378,67 @@ run()
             </div>
         </div>
         
+        <h2>Deep Research Demo — Live Trace</h2>
+        
+        <div style="background: #fdfcfa; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; margin: 32px 0;">
+            <p style="margin-bottom: 16px;">We ran the deep research workflow to answer: <strong>"What is the AI coding assistant market size in 2024?"</strong></p>
+            
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;">
+                <div style="text-align: center; padding: 16px; background: white; border-radius: 8px; border: 1px solid #e5e7eb;">
+                    <div style="font-size: 1.75rem; font-weight: 700; color: #6366f1;">81.24s</div>
+                    <div style="font-size: 0.75rem; color: #6b7280; text-transform: uppercase;">Total Time</div>
+                </div>
+                <div style="text-align: center; padding: 16px; background: white; border-radius: 8px; border: 1px solid #e5e7eb;">
+                    <div style="font-size: 1.75rem; font-weight: 700; color: #6366f1;">180K</div>
+                    <div style="font-size: 0.75rem; color: #6b7280; text-transform: uppercase;">Tokens</div>
+                </div>
+                <div style="text-align: center; padding: 16px; background: white; border-radius: 8px; border: 1px solid #e5e7eb;">
+                    <div style="font-size: 1.75rem; font-weight: 700; color: #6366f1;">$0.0186</div>
+                    <div style="font-size: 0.75rem; color: #6b7280; text-transform: uppercase;">Cost</div>
+                </div>
+                <div style="text-align: center; padding: 16px; background: white; border-radius: 8px; border: 1px solid #e5e7eb;">
+                    <div style="font-size: 1.75rem; font-weight: 700; color: #6366f1;">11</div>
+                    <div style="font-size: 0.75rem; color: #6b7280; text-transform: uppercase;">Sub-agents</div>
+                </div>
+            </div>
+            
+            <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 12px;">What Happened:</h3>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.8125rem; background: #1c1917; color: #e5e7eb; padding: 16px; border-radius: 8px; overflow-x: auto;">
+<span style="color: #22c55e;">Deep Research Agent</span> (81.24s)
+└── <span style="color: #a5d6ff;">WorkflowAction</span> (74.36s) — agent wrote the orchestration
+    ├── <span style="color: #f59e0b;">[Parallel] web_searcher agents</span> (54.93s)
+    │   ├── Task 1: Research market overview...
+    │   ├── Task 2: Search market size...
+    │   ├── Task 3: Search key players...
+    │   ├── Task 4: Research expert opinions...
+    │   └── Task 5: Research trends...
+    │
+    ├── <span style="color: #f59e0b;">[Parallel] fact_checker agents</span> (34.63s)
+    │   ├── Task 1: Verify market data...
+    │   ├── Task 2: Verify growth projections...
+    │   └── ...
+    │
+    └── <span style="color: #22c55e;">[Final] synthesizer agent</span>
+        └── Created the report
+            </div>
+            
+            <h3 style="font-size: 1rem; font-weight: 600; margin: 20px 0 12px;">The Agent Wrote This Code:</h3>
+            <div class="code-block" style="font-size: 0.75rem;">
+<span style="color: #9ca3af;">async def main(wf):</span>
+<span style="color: #9ca3af;">    angles = ['Market overview...', 'Technical...', 'Expert opinions...', ...]</span>
+<span style="color: #9ca3af;">    market_data = await wf.map_agents(</span>
+<span style="color: #9ca3af;">        items=angles, subagent_type='web_searcher', max_concurrency=3</span>
+<span style="color: #9ca3af;">    )</span>
+<span style="color: #9ca3af;">    verified_data = await wf.map_agents(</span>
+<span style="color: #9ca3af;">        items=market_data, subagent_type='fact_checker'</span>
+<span style="color: #9ca3af;">    )</span>
+<span style="color: #9ca3af;">    final_report = await wf.reduce_agent(</span>
+<span style="color: #9ca3af;">        items=verified_data, subagent_type='synthesizer'</span>
+<span style="color: #9ca3af;">    )</span>
+<span style="color: #9ca3af;">    return final_report</span>
+            </div>
+        </div>
+        
         <h2>See It In Action</h2>
         
         <div class="demos">
