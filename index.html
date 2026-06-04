@@ -232,6 +232,33 @@
             background: #e0e7ff;
             color: #4338ca;
         }
+
+        .video-link {
+            display: block;
+            margin: 32px 0;
+            padding: 24px;
+            background: #111827;
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .video-link:hover {
+            transform: translateY(-2px);
+            background: #1f2937;
+        }
+
+        .video-link h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .video-link p {
+            color: #d1d5db;
+            font-size: 0.9375rem;
+        }
         
         .cta {
             text-align: center;
@@ -440,6 +467,11 @@ run()
         </div>
         
         <h2>See It In Action</h2>
+
+        <a href="https://www.youtube.com/watch?v=PtbrKTgj3X8" class="video-link">
+            <h3>Watch the Dynamic Workflows Deep Dive</h3>
+            <p>Walk through the deep-research demo, the generated orchestration code, and the OpenHands workflow setup.</p>
+        </a>
         
         <div class="demos">
             <a href="old-way.html" class="demo-card">

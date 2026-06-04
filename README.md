@@ -4,6 +4,8 @@
 
 As models improve, they can now *write the orchestration loop themselves*. This repo walks through examples using the [OpenHands SDK](https://docs.openhands.dev/sdk).
 
+Watch the companion deep dive: [Dynamic Workflows deep-dive video](https://www.youtube.com/watch?v=PtbrKTgj3X8).
+
 > **About this implementation:** This is the OpenHands SDK's implementation of dynamic workflows,
 > inspired by [Claude Code's Dynamic Workflows](https://claude.com/blog/introducing-dynamic-workflows-in-claude-code).
 > We don't know exactly how Anthropic implements it — this is our interpretation using open source tools. See the [original PR](https://github.com/OpenHands/software-agent-sdk/pull/3426).
@@ -152,8 +154,8 @@ python multi_expert_review/multi_expert_review_manual.py <file_path>
 
 ## Resources
 
+- [Dynamic Workflows deep-dive video](https://www.youtube.com/watch?v=PtbrKTgj3X8) — Walkthrough of this repo's deep-research workflow demo
 - [OpenHands SDK](https://github.com/OpenHands/software-agent-sdk) — Our implementation
 - [PR #3426: Dynamic Workflow Tool](https://github.com/OpenHands/software-agent-sdk/pull/3426) — The code
 - [Claude Code: Dynamic Workflows](https://claude.com/blog/introducing-dynamic-workflows-in-claude-code) — Their blog post
 - [LangChain: Deep Research](https://docs.langchain.com/oss/python/deepagents/deep-research) — Example of manual orchestration
-
